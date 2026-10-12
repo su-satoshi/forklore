@@ -1,7 +1,7 @@
 ---
 // The ForkLore cover collage, split into layers so some pieces can move.
 // Layers are listed bottom to top, positioned on the original 1200 x 300 artboard.
-import { url, SITE } from '../lib/site';
+import { url } from '../lib/site';
 
 // bug and star extend above the frame (negative y): they sit cut off at the top edge,
 // and show in full only while they move.
@@ -27,10 +27,8 @@ const box = (l: { x: number; y: number; w: number }) => `left:${pct(l.x, W)};top
 <div class="collage">
   <div class="static-wrap">
     <img class="static" src={url('/images/collage/static.webp')} width="2400" height="600" alt="ForkLore collage: a big yellow 'hi!' on orange, with a Melbourne tram trailing fire, a spinning purple asterisk, an equestrian statue, a retro error window, a wifi symbol, a bug, a floating TV-headed figure in a red hat and pixel sunglasses, and a Bitcoin sign reading 'I'm hodling it'." loading="lazy" decoding="async" />
-    <button type="button" class="bug-hit" aria-label="Admin access" data-admin-open></button>
   </div>
   <div class="stage-wrap">
-  <button type="button" class="bug-hit" aria-label="Admin access" data-admin-open></button>
   <div class="stage" role="img" aria-label="ForkLore collage: a big yellow 'hi!' on orange, with a Melbourne tram trailing fire, a spinning purple asterisk, an equestrian statue, a retro error window, a wifi symbol, a bug, a floating TV-headed figure in a red hat and pixel sunglasses, and a Bitcoin sign reading 'I'm hodling it'.">
     {layers.map((l) => (
       <img
@@ -64,33 +62,7 @@ const box = (l: { x: number; y: number; w: number }) => `left:${pct(l.x, W)};top
   </svg>
 </div>
 
-<dialog class="admin" aria-labelledby="admin-title">
-  <img class="admin-bug" src={url('/images/bug.png')} width="64" height="64" alt="" />
-  <h2 id="admin-title">Admin access</h2>
-  {SITE.goatcounter ? (
-    <>
-      <p>ForkLore's insights live on GoatCounter: visitors, page views, top posts, referrers, countries, devices and clicks. Log in there to see the dashboard.</p>
-      <div class="admin-actions">
-        <a class="admin-login" href={`https://${SITE.goatcounter}.goatcounter.com`} target="_blank" rel="noopener">Log in to dashboard</a>
-        <button type="button" class="admin-close" data-admin-close>Close</button>
-      </div>
-    </>
-  ) : (
-    <>
-      <p>The insights dashboard isn't connected yet. Check back soon.</p>
-      <div class="admin-actions">
-        <button type="button" class="admin-close" data-admin-close>Close</button>
-      </div>
-    </>
-  )}
-</dialog>
-
 <script>
-  // Clicking the bug in the footer art opens the admin dialog
-  const dlg = document.querySelector<HTMLDialogElement>('dialog.admin');
-  document.querySelectorAll('[data-admin-open]').forEach((b) => b.addEventListener('click', () => dlg?.showModal()));
-  dlg?.querySelector('[data-admin-close]')?.addEventListener('click', () => dlg.close());
-  dlg?.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
 
   // Only animate on large screens, and only while the collage is on screen.
   const el = document.querySelector('.collage');
@@ -183,47 +155,4 @@ const box = (l: { x: number; y: number; w: number }) => `left:${pct(l.x, W)};top
     .ember { display: none; }
   }
 
-  /* Invisible button over the bug in the art */
-  .bug-hit {
-    position: absolute;
-    z-index: 5;
-    left: 66.5%;
-    top: 0;
-    width: 11%;
-    height: 34%;
-    padding: 0;
-    border: 0;
-    border-radius: 40%;
-    background: transparent;
-  }
-  .bug-hit:focus-visible { outline: 3px solid #000; outline-offset: 2px; }
-
-  /* Admin dialog */
-  .admin {
-    width: min(420px, calc(100vw - 32px));
-    padding: 28px 26px 24px;
-    border: 2px solid #000;
-    border-radius: 28px;
-    background: #f3efe4;
-    color: #000;
-    text-align: center;
-  }
-  .admin::backdrop { background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(3px); }
-  .admin-bug { margin: 0 auto 8px; width: 56px; height: 56px; }
-  .admin h2 { font-family: var(--font-display); font-weight: 900; font-size: 1.8rem; margin: 0 0 10px; }
-  .admin p { margin: 0 0 20px; line-height: 1.55; font-size: 0.95rem; }
-  .admin code { background: #ffde59; padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.85em; }
-  .admin-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-  .admin-login, .admin-close {
-    padding: 11px 20px;
-    border-radius: 999px;
-    font: inherit;
-    font-weight: 700;
-    font-size: 0.95rem;
-    background-image: none;
-  }
-  .admin-login { background: #ed6c1d; color: #000; border: 2px solid #000; }
-  .admin-login:hover { background: #ffde59; }
-  .admin-close { background: transparent; color: #000; border: 2px solid #000; }
-  .admin-close:hover { background: #000; color: #f3efe4; }
 </style>

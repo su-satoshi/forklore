@@ -69,14 +69,9 @@ The footer has a "Subscribe to the mailing list" form. Until it's connected, sub
 
 From then on, follow.it emails subscribers automatically whenever a new post appears in the RSS feed.
 
-## Insights dashboard (GoatCounter)
+## Analytics (optional, off)
 
-Clicking the bug in the footer art opens an "Admin access" dialog that links to the analytics dashboard. Login happens on GoatCounter, so no password ever lives in this site's code.
-
-1. Sign up at goatcounter.com and choose a code (for example `forklore`, giving `forklore.goatcounter.com`).
-2. Put that code in `goatcounter` in `src/lib/site.ts`, then commit and push.
-
-Tracking then covers page views, unique visitors, top posts, referrers, countries, browsers, devices and screen sizes, plus these click events: post cards (`card-...`), topic filters (`filter-...`), the footer RSS, GitHub and coffee links, and Subscribe.
+Tracking is switched off. To turn on GoatCounter later, sign up at goatcounter.com and put your code in `goatcounter` in `src/lib/site.ts`. Post cards, topic filters and footer links are already tagged for click counts.
 
 ## Custom domain
 
