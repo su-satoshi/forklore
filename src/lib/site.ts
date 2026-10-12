@@ -9,7 +9,7 @@ export const SITE = {
   coffee: 'https://buymeacoffee.com/jaswanthonk',
   // Email subscriptions via follow.it. Paste the form "action" URL from your follow.it
   // subscription form code here (it looks like https://api.follow.it/subscription-form/.../8).
-  // While it's empty, the footer form shows "coming soon" and can't be submitted.
+  // While it's empty, the form can be typed in but submitting only shows a "sign-ups open soon" note.
   newsletterAction: '',
 };
 

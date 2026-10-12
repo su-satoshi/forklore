@@ -61,7 +61,7 @@ Pushing to `main` runs `.github/workflows/deploy.yml`, which builds the site and
 
 ## Email subscriptions (follow.it)
 
-The footer has a "Get new posts by email" form. It stays switched off until it's connected:
+The footer has a "Subscribe to the mailing list" form. Until it's connected, submitting it only shows a "sign-ups open soon" note:
 
 1. Sign up at follow.it and add the feed `https://su-satoshi.github.io/forklore/rss.xml`.
 2. Create a subscription form and copy the URL in its `action="..."` attribute (it starts with `https://api.follow.it/subscription-form/`).

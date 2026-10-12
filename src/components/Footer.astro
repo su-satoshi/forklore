@@ -8,21 +8,20 @@ const year = new Date().getFullYear();
   <div class="card">
   <div class="wrap footer-inner">
     <section class="subscribe" aria-labelledby="subscribe-title">
-      <h2 id="subscribe-title">Get new posts by email</h2>
-      <p class="sub-note">One email when a new post goes up. No spam, unsubscribe any time.</p>
-      {SITE.newsletterAction ? (
-        <form class="sub-form" action={SITE.newsletterAction} method="post" target="_blank">
-          <label class="visually-hidden" for="sub-email">Email address</label>
-          <input id="sub-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
-          <button type="submit">Subscribe</button>
-        </form>
-      ) : (
-        <form class="sub-form is-off" aria-disabled="true" onsubmit="return false">
-          <label class="visually-hidden" for="sub-email">Email address</label>
-          <input id="sub-email" type="email" disabled placeholder="Coming soon" />
-          <button type="submit" disabled>Subscribe</button>
-        </form>
-      )}
+      <h2 id="subscribe-title">Subscribe to the mailing list</h2>
+      <p class="sub-note">Stay updated on new posts, straight to your inbox. No spam, unsubscribe any time.</p>
+      <form
+        class="sub-form"
+        action={SITE.newsletterAction || undefined}
+        method="post"
+        target="_blank"
+        data-live={SITE.newsletterAction ? 'true' : 'false'}
+      >
+        <label class="visually-hidden" for="sub-email">Email address</label>
+        <input id="sub-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="sub-status" role="status" hidden></p>
     </section>
     <div class="about">
     <ul class="links">
@@ -52,6 +51,20 @@ const year = new Date().getFullYear();
   </div>
   <Collage />
 </footer>
+
+<script>
+  // Until the mailing list service is connected, don't send the address anywhere; say so instead.
+  const form = document.querySelector<HTMLFormElement>('.sub-form');
+  const status = document.querySelector<HTMLElement>('.sub-status');
+  form?.addEventListener('submit', (e) => {
+    if (form.dataset.live === 'true') return;
+    e.preventDefault();
+    if (status) {
+      status.textContent = "Sign-ups open very soon. Your address wasn't saved, so please check back shortly.";
+      status.hidden = false;
+    }
+  });
+</script>
 
 <style>
   .site-footer { --page-radius: clamp(24px, 4vw, 48px); --card-inset: clamp(10px, 1.4vw, 18px); margin-top: 96px; }
@@ -133,8 +146,7 @@ const year = new Date().getFullYear();
     font-size: 0.95rem;
   }
   .sub-form button:hover { background: #ffde59; }
-  .sub-form.is-off { opacity: 0.55; }
-  .sub-form.is-off button:hover { background: #ed6c1d; }
+  .sub-status { margin: 10px 0 0; font-size: 0.9rem; color: #ffde59; }
   .sign { margin: 0; max-width: 46ch; }
   .links { display: flex; gap: 12px; list-style: none; margin: 0; padding: 0; }
   .card .icon-link {
