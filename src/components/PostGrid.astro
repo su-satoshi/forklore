@@ -43,11 +43,19 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     </div>
     {heading && <h2 class="bar-title">{heading}</h2>}
     {intro && <p class="bar-intro">{intro}</p>}
+    <div class="filters-wrap">
+    <button type="button" class="scroll-btn prev" aria-label="Scroll topics left" hidden>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
     <div class="filters" role="group" aria-label="Topics">
       <button type="button" class="pill" aria-pressed="true" data-tag="">All <span>{posts.length}</span></button>
       {topics.map(([t, n]) => (
         <button type="button" class="pill" aria-pressed="false" data-tag={slugify(t)}>{t} <span>{n}</span></button>
       ))}
+    </div>
+    <button type="button" class="scroll-btn next" aria-label="Scroll topics right" hidden>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
     </div>
   </section>
 )}
@@ -102,6 +110,51 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
       apply();
     }));
     input?.addEventListener('input', apply);
+
+    // Topics row: arrows, mouse wheel and drag all scroll it sideways
+    const row = bar.querySelector<HTMLElement>('.filters');
+    const prev = bar.querySelector<HTMLButtonElement>('.scroll-btn.prev');
+    const next = bar.querySelector<HTMLButtonElement>('.scroll-btn.next');
+    if (row && prev && next) {
+      const update = () => {
+        const max = row.scrollWidth - row.clientWidth;
+        prev.hidden = row.scrollLeft <= 2;
+        next.hidden = row.scrollLeft >= max - 2;
+        row.classList.toggle('at-end', row.scrollLeft >= max - 2);
+      };
+      const step = () => Math.max(160, row.clientWidth * 0.6);
+      prev.addEventListener('click', () => row.scrollBy({ left: -step(), behavior: 'smooth' }));
+      next.addEventListener('click', () => row.scrollBy({ left: step(), behavior: 'smooth' }));
+      row.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      // A normal (vertical) mouse wheel scrolls the row sideways while it has more to show
+      row.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        const max = row.scrollWidth - row.clientWidth;
+        if (max <= 0) return;
+        const atStart = row.scrollLeft <= 0 && e.deltaY < 0;
+        const atEnd = row.scrollLeft >= max - 1 && e.deltaY > 0;
+        if (atStart || atEnd) return;
+        e.preventDefault();
+        row.scrollLeft += e.deltaY;
+      }, { passive: false });
+      // Click and drag with a mouse
+      let down = false, startX = 0, startLeft = 0, moved = false;
+      row.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        down = true; moved = false; startX = e.clientX; startLeft = row.scrollLeft;
+      });
+      window.addEventListener('pointermove', (e) => {
+        if (!down) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 4) { moved = true; row.classList.add('dragging'); }
+        row.scrollLeft = startLeft - dx;
+      });
+      window.addEventListener('pointerup', () => { down = false; row.classList.remove('dragging'); });
+      // Don't treat the end of a drag as a click on a topic
+      row.addEventListener('click', (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+      update();
+    }
   }
 </script>
 
@@ -143,6 +196,28 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
   }
   .filters::-webkit-scrollbar { display: none; }
+  .filters.at-end { mask-image: none; }
+  .filters.dragging { scroll-snap-type: none; user-select: none; }
+  .filters-wrap { position: relative; }
+  .scroll-btn {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+    border: 0;
+    border-radius: 50%;
+    background: #f3efe4;
+    color: #000;
+    box-shadow: 0 0 0 4px #000;
+  }
+  .scroll-btn:hover { background: #ffde59; }
+  .scroll-btn[hidden] { display: none; }
+  .prev { left: calc(-1 * clamp(6px, 1vw, 12px)); }
+  .next { right: calc(-1 * clamp(6px, 1vw, 12px)); }
   .pill { flex: none; scroll-snap-align: start; white-space: nowrap; }
   .pill {
     font: inherit;
@@ -171,32 +246,33 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
   .search input { flex: 1; min-width: 0; border: 0; background: none; color: #f3efe4; font: inherit; font-size: 0.95rem; outline: none; }
   .search input::placeholder { color: rgba(243, 239, 228, 0.5); }
 
+  /* Blocks are rebuilt by script when filtering, so their rules are global (scoped under .bento) */
   /* Bento blocks: sizes vary, but every column in a block ends on the same line */
   .bento { display: grid; gap: 16px; }
-  .block { display: grid; gap: 16px; grid-auto-rows: minmax(250px, auto); }
-  .block > :global([data-slot='a']) { grid-area: a; }
-  .block > :global([data-slot='b']) { grid-area: b; }
-  .block > :global([data-slot='c']) { grid-area: c; }
-  .block > :global([data-slot='d']) { grid-area: d; }
-  .block > :global([data-slot='e']) { grid-area: e; }
-  .block > :global([data-slot='f']) { grid-area: f; }
+  .bento :global(.block) { display: grid; gap: 16px; grid-auto-rows: minmax(250px, auto); }
+  .bento :global(.block > [data-slot='a']) { grid-area: a; }
+  .bento :global(.block > [data-slot='b']) { grid-area: b; }
+  .bento :global(.block > [data-slot='c']) { grid-area: c; }
+  .bento :global(.block > [data-slot='d']) { grid-area: d; }
+  .bento :global(.block > [data-slot='e']) { grid-area: e; }
+  .bento :global(.block > [data-slot='f']) { grid-area: f; }
 
-  .n6 { grid-template-columns: 1fr 0.9fr 0.9fr 1.25fr; grid-template-areas: 'a c d d' 'b c e f'; }
-  .n5 { grid-template-columns: 1fr 0.9fr 2fr; grid-template-areas: 'a c d' 'b c e'; }
-  .n4 { grid-template-columns: 0.9fr 1fr 1fr; grid-template-areas: 'c d d' 'c e f'; }
-  .n3 { grid-template-columns: 1fr 1.5fr; grid-template-areas: 'c d' 'c e'; }
-  .n2 { grid-template-columns: 1.6fr 1fr; grid-template-areas: 'd c'; }
-  .n1 { grid-template-columns: 1fr; grid-template-areas: 'd'; }
+  .bento :global(.n6) { grid-template-columns: 1fr 0.9fr 0.9fr 1.25fr; grid-template-areas: 'a c d d' 'b c e f'; }
+  .bento :global(.n5) { grid-template-columns: 1fr 0.9fr 2fr; grid-template-areas: 'a c d' 'b c e'; }
+  .bento :global(.n4) { grid-template-columns: 0.9fr 1fr 1fr; grid-template-areas: 'c d d' 'c e f'; }
+  .bento :global(.n3) { grid-template-columns: 1fr 1.5fr; grid-template-areas: 'c d' 'c e'; }
+  .bento :global(.n2) { grid-template-columns: 1.6fr 1fr; grid-template-areas: 'd c'; }
+  .bento :global(.n1) { grid-template-columns: 1fr; grid-template-areas: 'd'; }
 
   @media (max-width: 960px) {
-    .n6 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c a' 'c b' 'e f'; }
-    .n5 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c a' 'c b' 'e e'; }
-    .n4 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c e' 'c f'; }
-    .n3 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c e'; }
+    .bento :global(.n6) { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c a' 'c b' 'e f'; }
+    .bento :global(.n5) { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c a' 'c b' 'e e'; }
+    .bento :global(.n4) { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c e' 'c f'; }
+    .bento :global(.n3) { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c e'; }
   }
   @media (max-width: 640px) {
-    .block { grid-template-columns: 1fr !important; grid-template-areas: none !important; grid-auto-rows: auto; }
-    .block > :global(.card) { grid-area: auto !important; }
+    .bento :global(.block) { grid-template-columns: 1fr !important; grid-template-areas: none !important; grid-auto-rows: auto; }
+    .bento :global(.block > .card) { grid-area: auto !important; }
   }
   .empty, .no-match { padding: 24px; border: 2px dashed var(--ink-soft); border-radius: 20px; }
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
