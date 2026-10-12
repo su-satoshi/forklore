@@ -6,7 +6,7 @@ Live at **https://su-satoshi.github.io/forklore/**
 
 ## Writing a post
 
-1. Copy `src/content/posts/_template.md` and rename it. The file name becomes the URL, so `sql-injection-basics.md` is published at `/forklore/posts/sql-injection-basics/`.
+1. Copy `src/content/posts/_template.md` and rename it without the underscore (files starting with `_` are ignored). The file name becomes the URL, so `sql-injection-basics.md` is published at `/forklore/posts/sql-injection-basics/`.
 2. Fill in the front matter (`title`, `description`, `pubDate`, `tags`).
 3. Optional, for the post's card on the home page:
    - `cover: "/images/posts/my-post.jpg"` and `coverAlt: "..."` to show an image (put the file in `public/images/posts/`)

@@ -4,7 +4,7 @@ import { url, slugify, formatDate, readingTime } from '../lib/site';
 
 interface Props { post: CollectionEntry<'posts'>; index: number; latest?: boolean }
 const { post, index, latest = false } = Astro.props;
-const { title, description, pubDate, tags, cover, coverAlt, color } = post.data;
+const { title, description, pubDate, tags, cover, coverAlt, color, draft } = post.data;
 const palette = ['orange', 'blue', 'yellow', 'purple', 'red', 'green', 'black'] as const;
 const tone = color ?? palette[index % palette.length];
 const href = url(`/posts/${post.id}`);
@@ -17,6 +17,7 @@ const href = url(`/posts/${post.id}`);
     <p class="desc">{description}</p>
     <p class="meta">
       {tags[0] && <a class="chip" href={url(`/topics/${slugify(tags[0])}`)}>{tags[0]}</a>}
+      {draft && <span class="draft">Draft</span>}
       <span><time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>, {readingTime(post)} min read</span>
     </p>
   </div>
@@ -130,6 +131,7 @@ const href = url(`/posts/${post.id}`);
     font-weight: 600;
     background-image: none;
   }
+  .draft { padding: 4px 10px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 700; font-size: 0.78rem; }
   .chip:hover { background: var(--yellow); color: #000; }
   .card:has(.title a:focus-visible) { outline: 3px solid var(--blue); outline-offset: 3px; }
   .title a:focus-visible { outline: none; }
