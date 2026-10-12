@@ -9,8 +9,8 @@
 .prose h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 2rem;
-  letter-spacing: 0.03em;
+  font-size: 1.75rem;
+  letter-spacing: 0.005em;
   margin-top: 2.2em;
   letter-spacing: 0.005em;
 }

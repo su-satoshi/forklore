@@ -16,7 +16,7 @@
   --link-mark: var(--yellow);
   --surface: #fffdf7;
 
-  --font-display: 'Bangers', 'Impact', sans-serif;
+  --font-display: 'Lilita One', 'Arial Rounded MT Bold', sans-serif;
   --font-body: 'Montserrat Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-code: 'JetBrains Mono Variable', ui-monospace, monospace;
 
@@ -137,7 +137,7 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
-/* Comic-style headings: Bangers is drawn in capitals and likes a little air between letters */
+/* Lilita One: playful, comic-style headings that stay readable */
 h1, h2, h3, .page-title {
-  letter-spacing: 0.03em;
+  letter-spacing: 0.005em;
 }

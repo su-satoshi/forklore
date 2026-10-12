@@ -38,6 +38,8 @@ const href = url(`/posts/${post.id}`);
     border: 2px solid #000;
   }
   .feature { min-height: 420px; }
+  /* Leave room above the panel for the Latest tab */
+  .card:has(.tab) { padding-top: 72px; }
   .tone-orange { --tone: #ed6c1d; }
   .tone-yellow { --tone: #ffde59; }
   .tone-blue { --tone: #0386fa; }
@@ -101,13 +103,12 @@ const href = url(`/posts/${post.id}`);
   .title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(1.6rem, 2.6vw, 2rem);
-    line-height: 1.02;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+    font-size: clamp(1.4rem, 2.3vw, 1.75rem);
+    line-height: 1.1;
+    letter-spacing: 0.005em;
     margin: 0;
   }
-  .feature .title { font-size: clamp(1.9rem, 3.6vw, 2.7rem); }
+  .feature .title { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
   .title a { background-size: 100% 0; }
   .title a::after { content: ''; position: absolute; inset: 0; z-index: 0; }
   .title a:hover { background-size: 100% 0.32em; }
