@@ -28,12 +28,28 @@ npm run build    # production build into dist/
 | Path | What it is |
 | --- | --- |
 | `src/content/posts/` | Blog posts in Markdown |
-| `src/styles/global.css` | Colour palette, fonts, grid-paper background |
+| `src/styles/global.css` | Brand colours, fonts, dark/light themes |
 | `src/styles/prose.css` | How post text, code blocks and quotes look |
-| `src/components/` | Header, footer, post list |
+| `src/components/` | Header, footer, post list, `LogoMark` (the branching-node logo) |
+| `public/brand/` | Logo mark and app icon as SVG |
 | `src/pages/` | Home, posts, topics, about, RSS feed |
 | `src/lib/site.ts` | Site name, author, social links |
 | `public/images/forklore-cover.webp` | Footer cover art |
+
+## Brand
+
+| Colour | Hex | Use |
+| --- | --- | --- |
+| Background | `#12071F` | Page background (dark mode) |
+| Violet | `#8B6CFF` | Labels, metadata, `// comments` |
+| Cream | `#F8F3EA` | Text, and background in light mode |
+| Orange | `#FF8A3D` | Logo node, cursor, links |
+
+Fonts: Fraunces (headings and body) and JetBrains Mono (labels and code), both self-hosted.
+
+## Deployment
+
+Pushing to `main` runs `.github/workflows/deploy.yml`, which builds the site and publishes it to the `gh-pages` branch. GitHub Pages serves that branch (Settings > Pages > Deploy from a branch > `gh-pages` / root).
 
 ## Custom domain
 

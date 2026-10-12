@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
+import LogoMark from '../components/LogoMark.astro';
 import { getPosts, url, slugify } from '../lib/site';
 
 const posts = await getPosts();
@@ -10,25 +11,35 @@ posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 
 const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
 ---
 <Base>
-  <div class="wrap home">
-    <section class="intro" aria-label="About ForkLore">
-      <p>
-        An independent tech blog on cybersecurity, AI vulnerabilities, blockchain cryptography, digital
-        forensics and the hidden mechanics of online systems. From vibe-coded security flaws to
-        algorithmic rabbit holes: follow the evidence, question the assumptions, document the discoveries.
-      </p>
-    </section>
+  <section class="hero" aria-labelledby="site-title">
+    <div class="wrap hero-grid">
+      <p class="beats" aria-hidden="true"><span>Tech</span><span>Security</span><span>Systems</span><span>&amp; beyond</span></p>
+      <h1 id="site-title" class="logo">
+        <span class="visually-hidden">ForkLore</span>
+        <span class="row" aria-hidden="true">F<LogoMark class="o" size="1.04em" />RK</span>
+        <span class="row" aria-hidden="true">LORE</span>
+      </h1>
+      <p class="tag-line">Deeper branches.<br />Better insights.<span class="cursor" aria-hidden="true"></span></p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <p class="intro">
+      An independent tech blog on cybersecurity, AI vulnerabilities, blockchain cryptography, digital
+      forensics and the hidden mechanics of online systems. From vibe-coded security flaws to algorithmic
+      rabbit holes: follow the evidence, question the assumptions, document the discoveries.
+    </p>
 
     <div class="grid">
       <section aria-labelledby="latest">
-        <h2 id="latest" class="section-title">Latest posts</h2>
+        <h2 id="latest" class="label section-label">// latest posts</h2>
         <PostList posts={latest} headingLevel="h3" />
         {posts.length > latest.length && <p class="more"><a href={url('/posts')}>See all {posts.length} posts</a></p>}
       </section>
 
       {topics.length > 0 && (
         <aside aria-labelledby="topics-h">
-          <h2 id="topics-h" class="section-title">Browse by topic</h2>
+          <h2 id="topics-h" class="label section-label">// topics</h2>
           <ul class="tags">
             {topics.map(([t, n]) => <li><a class="tag" href={url(`/topics/${slugify(t)}`)}>{t} <span class="n">{n}</span></a></li>)}
           </ul>
@@ -39,32 +50,58 @@ const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
 </Base>
 
 <style>
-  .home { padding-top: 44px; }
-  .intro p {
-    margin: 0;
-    max-width: 40ch;
-    font-size: clamp(1.25rem, 2.4vw, 1.55rem);
-    line-height: 1.45;
-    font-weight: 500;
-  }
-  .grid {
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .hero { border-bottom: 1px solid var(--rule); }
+  .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 240px;
-    gap: 56px;
-    margin-top: 56px;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px 48px;
+    padding-block: clamp(48px, 9vw, 104px);
   }
-  .section-title {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 18px;
-    padding-bottom: 8px;
-    border-bottom: 3px solid var(--ink);
+  .beats, .tag-line {
+    margin: 0;
+    font-family: var(--font-mono);
+    color: var(--label);
+    line-height: 2;
   }
-  aside .section-title { border-bottom-color: var(--orange); }
-  .n { color: var(--ink-soft); font-weight: 400; margin-left: 2px; }
+  .beats {
+    justify-self: end;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-size: 0.85rem;
+    padding-right: 32px;
+    border-right: 1px solid var(--rule);
+  }
+  .tag-line { font-size: 1.1rem; line-height: 1.75; padding-left: 8px; }
+  .logo {
+    font-weight: 900;
+    font-size: clamp(4.2rem, 13vw, 9.5rem);
+    line-height: 0.88;
+    letter-spacing: 0.005em;
+    font-variation-settings: 'opsz' 144, 'wght' 900, 'SOFT' 0, 'WONK' 0;
+  }
+  .row { display: block; white-space: nowrap; }
+  .logo :global(.o) { display: inline-block; vertical-align: -0.135em; margin-inline: -0.03em; overflow: visible; --ring-w: 15; }
+  .beats span { display: block; }
+
+  .intro {
+    margin: 56px 0 0;
+    max-width: 44ch;
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    line-height: 1.5;
+  }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 56px; margin-top: 64px; }
+  .section-label { padding-bottom: 12px; margin-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .n { color: var(--accent-ink); margin-left: 2px; }
   .more { font-weight: 600; }
-  @media (max-width: 820px) {
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; justify-items: start; }
+    .beats { justify-self: start; border-right: 0; padding-right: 0; letter-spacing: 0.24em; }
+    .beats span { display: inline; }
+    .beats span + span::before { content: ' / '; letter-spacing: 0; }
+    .beats { order: 2; }
+    .tag-line { order: 3; padding-left: 0; }
     .grid { grid-template-columns: 1fr; gap: 40px; }
     aside { order: -1; }
   }

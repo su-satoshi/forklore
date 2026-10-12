@@ -1,7 +1,6 @@
 ---
-import '@fontsource/bowlby-one/400.css';
-import '@fontsource-variable/literata/opsz.css';
-import '@fontsource-variable/literata/opsz-italic.css';
+import '@fontsource-variable/fraunces/full.css';
+import '@fontsource-variable/fraunces/full-italic.css';
 import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
@@ -35,11 +34,11 @@ const ogImage = new URL(url('/images/og.jpg'), Astro.site);
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#ed6c1d" />
+    <meta name="theme-color" content="#12071f" />
     <script is:inline>
       try {
         const t = localStorage.getItem('forklore-theme');
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        if (t === 'light') document.documentElement.dataset.theme = 'light';
       } catch (e) {}
     </script>
   </head>
