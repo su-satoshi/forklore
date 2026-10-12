@@ -7,9 +7,24 @@ const year = new Date().getFullYear();
   <div class="panel">
   <div class="card">
   <div class="wrap footer-inner">
-    <p class="sign">
-      Written and built by {SITE.author} in Melbourne. Follow the evidence, question the assumptions.
-    </p>
+    <section class="subscribe" aria-labelledby="subscribe-title">
+      <h2 id="subscribe-title">Get new posts by email</h2>
+      <p class="sub-note">One email when a new post goes up. No spam, unsubscribe any time.</p>
+      {SITE.newsletterAction ? (
+        <form class="sub-form" action={SITE.newsletterAction} method="post" target="_blank">
+          <label class="visually-hidden" for="sub-email">Email address</label>
+          <input id="sub-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+          <button type="submit">Subscribe</button>
+        </form>
+      ) : (
+        <form class="sub-form is-off" aria-disabled="true" onsubmit="return false">
+          <label class="visually-hidden" for="sub-email">Email address</label>
+          <input id="sub-email" type="email" disabled placeholder="Coming soon" />
+          <button type="submit" disabled>Subscribe</button>
+        </form>
+      )}
+    </section>
+    <div class="about">
     <ul class="links">
       <li>
         <a class="icon-link" href={url('/rss.xml')} aria-label="RSS feed" title="RSS feed">
@@ -27,7 +42,11 @@ const year = new Date().getFullYear();
         </a>
       </li>
     </ul>
-    <p class="copy">&copy; {year} ForkLore</p>
+      <p class="sign">
+        Written and built by {SITE.author} in Melbourne. Follow the evidence, question the assumptions.
+      </p>
+      <p class="copy">&copy; {year} ForkLore</p>
+    </div>
   </div>
   </div>
   </div>
@@ -70,11 +89,52 @@ const year = new Date().getFullYear();
   .site-footer :global(.collage) { margin-top: calc(-1 * var(--page-radius)); padding-top: var(--page-radius); }
   .footer-inner {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px 32px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 28px 56px;
     padding-block: 36px 40px;
     align-items: start;
   }
+  .about { display: flex; flex-direction: column; align-items: flex-end; gap: 16px; text-align: right; }
+  .about .sign { max-width: 40ch; }
+
+  /* Email subscribe */
+  .subscribe h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    margin: 0 0 8px;
+  }
+  .sub-note { margin: 0 0 16px; color: var(--card-soft); font-size: 0.95rem; }
+  .sub-form { display: flex; flex-wrap: wrap; gap: 8px; max-width: 460px; }
+  .sub-form input { flex: 1 1 200px; }
+  .sub-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--card-ring);
+    background: transparent;
+    color: var(--card-ink);
+    font: inherit;
+    font-size: 0.95rem;
+  }
+  .sub-form input::placeholder { color: var(--card-soft); }
+  .sub-form input:focus-visible { outline: 2px solid #ed6c1d; outline-offset: 2px; }
+  .sub-form button {
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: 0;
+    background: #ed6c1d;
+    color: #000;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .sub-form button:hover { background: #ffde59; }
+  .sub-form.is-off { opacity: 0.55; }
+  .sub-form.is-off button:hover { background: #ed6c1d; }
   .sign { margin: 0; max-width: 46ch; }
   .links { display: flex; gap: 12px; list-style: none; margin: 0; padding: 0; }
   .card .icon-link {
@@ -91,7 +151,9 @@ const year = new Date().getFullYear();
   }
   .card .icon-link:hover { background: #ed6c1d; border-color: #ed6c1d; color: #000; }
   .copy { margin: 0; color: var(--card-soft); font-size: 0.9rem; }
-  @media (max-width: 640px) {
-    .footer-inner { grid-template-columns: 1fr; }
+  @media (max-width: 760px) {
+    .footer-inner { grid-template-columns: minmax(0, 1fr); }
+    .about { align-items: flex-start; text-align: left; }
   }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>

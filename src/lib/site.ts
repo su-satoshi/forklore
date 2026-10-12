@@ -7,6 +7,10 @@ export const SITE = {
   author: 'Jaswanth',
   github: 'https://github.com/su-satoshi',
   coffee: 'https://buymeacoffee.com/jaswanthonk',
+  // Email subscriptions via follow.it. Paste the form "action" URL from your follow.it
+  // subscription form code here (it looks like https://api.follow.it/subscription-form/.../8).
+  // While it's empty, the footer form shows "coming soon" and can't be submitted.
+  newsletterAction: '',
 };
 
 /** Prefix a path with the site base (/forklore) so links work locally and on GitHub Pages. */

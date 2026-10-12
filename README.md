@@ -59,6 +59,16 @@ The footer art is the cover collage split into layers in `public/images/collage/
 
 Pushing to `main` runs `.github/workflows/deploy.yml`, which builds the site and publishes it to the `gh-pages` branch. GitHub Pages serves that branch (Settings > Pages > Deploy from a branch > `gh-pages` / root).
 
+## Email subscriptions (follow.it)
+
+The footer has a "Get new posts by email" form. It stays switched off until it's connected:
+
+1. Sign up at follow.it and add the feed `https://su-satoshi.github.io/forklore/rss.xml`.
+2. Create a subscription form and copy the URL in its `action="..."` attribute (it starts with `https://api.follow.it/subscription-form/`).
+3. Paste it into `newsletterAction` in `src/lib/site.ts`, then commit and push.
+
+From then on, follow.it emails subscribers automatically whenever a new post appears in the RSS feed.
+
 ## Custom domain
 
 To move to your own domain later, add it under Settings > Pages, then in `astro.config.mjs` set `site` to the new domain and remove the `base` line.
