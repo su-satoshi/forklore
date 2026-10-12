@@ -1,16 +1,14 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PostList from '../../components/PostList.astro';
+import PostGrid from '../../components/PostGrid.astro';
 import { getPosts } from '../../lib/site';
 const posts = await getPosts();
 ---
 <Base title="All posts" description="Every ForkLore post, newest first.">
   <div class="wrap page">
-    <h1 class="page-title">All posts</h1>
-    <PostList posts={posts} />
+    <PostGrid posts={posts} filters heading="Posts" />
   </div>
 </Base>
 <style>
-  .page { padding-top: 48px; max-width: 860px; }
-  .page-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 28px; }
+  .page { padding-top: 32px; }
 </style>

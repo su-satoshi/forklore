@@ -1,0 +1,140 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, slugify, formatDate, readingTime } from '../lib/site';
+
+interface Props { post: CollectionEntry<'posts'>; index: number; latest?: boolean }
+const { post, index, latest = false } = Astro.props;
+const { title, description, pubDate, tags, cover, coverAlt, color } = post.data;
+const palette = ['orange', 'blue', 'yellow', 'purple', 'red', 'green', 'black'] as const;
+const tone = color ?? palette[index % palette.length];
+const href = url(`/posts/${post.id}`);
+---
+<article class:list={['card', `tone-${tone}`, { feature: index === 0 }]} data-tags={tags.map(slugify).join(' ')} data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}>
+  {cover && <img class="cover" src={url(cover)} alt={coverAlt ?? ''} loading="lazy" decoding="async" />}
+  <div class="panel">
+    {latest && <span class="tab"><span class="badge">Latest</span></span>}
+    <h3 class="title"><a href={href}>{title}</a></h3>
+    <p class="desc">{description}</p>
+    <p class="meta">
+      {tags[0] && <a class="chip" href={url(`/topics/${slugify(tags[0])}`)}>{tags[0]}</a>}
+      <span><time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>, {readingTime(post)} min read</span>
+    </p>
+  </div>
+</article>
+
+<style>
+  .card {
+    --r: 28px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 340px;
+    padding: 14px;
+    border-radius: var(--r);
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--tone);
+    border: 2px solid #000;
+  }
+  .feature { min-height: 420px; }
+  .tone-orange { --tone: #ed6c1d; }
+  .tone-yellow { --tone: #ffde59; }
+  .tone-blue { --tone: #0386fa; }
+  .tone-purple { --tone: #6b3fd4; }
+  .tone-red { --tone: #f24841; }
+  .tone-green { --tone: #1f7a4a; }
+  .tone-black { --tone: #000; }
+  /* Faint grid-paper texture on colour cards */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+
+  .panel {
+    position: relative;
+    width: 100%;
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: calc(var(--r) - 8px);
+    padding: 20px 22px 18px;
+  }
+  .feature .panel { max-width: 640px; }
+
+  /* "Latest" badge sits on a tab that grows out of the panel's top edge */
+  .tab {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% - 1px);
+    padding: 10px 10px 0;
+    background: var(--surface);
+    border-radius: 18px 18px 0 0;
+  }
+  .tab::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    bottom: 0;
+    width: 18px;
+    height: 18px;
+    background: radial-gradient(circle at 100% 0, transparent 17.5px, var(--surface) 18px);
+  }
+  .badge {
+    display: block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 700;
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+  .panel:has(.tab) { border-top-left-radius: 0; }
+
+  .title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    margin: 0;
+  }
+  .feature .title { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+  .title a { background-size: 100% 0; }
+  .title a::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+  .title a:hover { background-size: 100% 0.32em; }
+  .desc {
+    margin: 10px 0 14px;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
+  .chip {
+    position: relative;
+    z-index: 1;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: 600;
+    background-image: none;
+  }
+  .chip:hover { background: var(--yellow); color: #000; }
+  .card:has(.title a:focus-visible) { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .title a:focus-visible { outline: none; }
+
+  @media (max-width: 640px) {
+    .card, .feature { min-height: 300px; }
+  }
+</style>

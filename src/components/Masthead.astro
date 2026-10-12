@@ -1,0 +1,19 @@
+---
+// Centred logo under the nav. Big on the home page, smaller elsewhere.
+import Logo from './Logo.astro';
+import { url } from '../lib/site';
+interface Props { home?: boolean }
+const { home = false } = Astro.props;
+const Tag = home ? 'h1' : 'div';
+---
+<Tag class:list={['masthead', { home }]}>
+  <a href={url('/')} aria-label="ForkLore home"><Logo /></a>
+</Tag>
+
+<style>
+  .masthead { display: flex; justify-content: center; margin: 8px 0 0; padding-inline: 16px; }
+  .masthead a { display: block; background: none; color: var(--ink); line-height: 0; }
+  .masthead :global(.logo) { width: clamp(120px, 18vw, 170px); height: auto; }
+  .masthead.home { margin-top: clamp(28px, 3vw, 32px); }
+  .masthead.home :global(.logo) { width: clamp(220px, 42vw, 420px); }
+</style>

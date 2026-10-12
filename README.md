@@ -8,8 +8,11 @@ Live at **https://su-satoshi.github.io/forklore/**
 
 1. Copy `src/content/posts/_template.md` and rename it. The file name becomes the URL, so `sql-injection-basics.md` is published at `/forklore/posts/sql-injection-basics/`.
 2. Fill in the front matter (`title`, `description`, `pubDate`, `tags`).
-3. Delete `draft: true` when it's ready to go live.
-4. Commit and push to `main`. GitHub Actions builds and deploys the site in a minute or two.
+3. Optional, for the post's card on the home page:
+   - `cover: "/images/posts/my-post.jpg"` and `coverAlt: "..."` to show an image (put the file in `public/images/posts/`)
+   - `color: "purple"` to pick the card colour when there's no image (orange, yellow, blue, purple, red, green or black)
+4. Delete `draft: true` when it's ready to go live.
+5. Commit and push to `main`. GitHub Actions builds and deploys the site in a minute or two.
 
 Images for posts go in `public/images/` and are referenced as `/forklore/images/your-image.png`.
 
@@ -30,7 +33,7 @@ npm run build    # production build into dist/
 | `src/content/posts/` | Blog posts in Markdown |
 | `src/styles/global.css` | Colour palette, fonts, grid-paper background |
 | `src/styles/prose.css` | How post text, code blocks and quotes look |
-| `src/components/` | Header, footer, post list, `LogoMark` (the branching-node logo) |
+| `src/components/` | Top nav, logo (`Logo.astro`), bento post grid and cards, footer, collage |
 | `public/brand/` | Logo mark and app icon as SVG |
 | `src/pages/` | Home, posts, topics, about, RSS feed |
 | `src/lib/site.ts` | Site name, author, social links |
@@ -44,9 +47,9 @@ npm run build    # production build into dist/
 | Paper | `#F3EFE4` | Grid-paper page background |
 | Ink | `#000000` | Text, rules, logo |
 
-Fonts: Bowlby One (headings), Literata (body), Fraunces (logo wordmark), JetBrains Mono (code). All self-hosted.
+Fonts: Bowlby One (headings), Literata (body), JetBrains Mono (code). All self-hosted.
 
-The logo mark is `src/components/LogoMark.astro`; standalone SVGs are in `public/brand/`.
+The logo is `src/components/Logo.astro` (letters follow the text colour, so black in light mode and cream in dark mode). Standalone SVGs are in `public/brand/`: `forklore-logo.svg` (cream letters) and `forklore-logo-inverted.svg` (black letters).
 
 ## Footer collage
 

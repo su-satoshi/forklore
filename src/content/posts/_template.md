@@ -5,6 +5,8 @@ title: "Post title"
 description: "One or two sentences shown in the post list and in link previews."
 pubDate: 2026-10-12
 tags: ["cybersecurity"]
+# cover: "/images/posts/my-post.jpg"   # optional card image
+# color: "purple"                       # optional card colour if no image
 draft: true
 ---
 

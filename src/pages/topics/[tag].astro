@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PostList from '../../components/PostList.astro';
+import PostGrid from '../../components/PostGrid.astro';
 import { getPosts, slugify, url } from '../../lib/site';
 
 export async function getStaticPaths() {
@@ -18,11 +18,11 @@ const { name, posts } = Astro.props;
   <div class="wrap page">
     <p class="back"><a href={url('/topics')}>All topics</a></p>
     <h1 class="page-title">{name}</h1>
-    <PostList posts={posts} />
+    <PostGrid posts={posts} />
   </div>
 </Base>
 <style>
-  .page { padding-top: 40px; max-width: 860px; }
+  .page { padding-top: 32px; }
   .back { margin: 0 0 8px; font-weight: 600; }
   .page-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 28px; }
 </style>
