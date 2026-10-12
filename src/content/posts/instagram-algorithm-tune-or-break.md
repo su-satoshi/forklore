@@ -3,7 +3,6 @@ title: "How the Instagram algorithm works, and how to tune it or break it"
 description: "What Instagram actually ranks on, combinations of signals that reshape your feed, and how to make it so boring you finally log off."
 pubDate: 2026-10-12
 tags: ["algorithms", "social-media", "privacy"]
-color: "purple"
 ---
 
 There is no single "Instagram algorithm". There are several ranking systems, one for each surface of the app, and each one is trying to predict something slightly different about you. Once you know what each one is predicting, you can steer it, or starve it.

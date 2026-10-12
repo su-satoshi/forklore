@@ -3,7 +3,6 @@ title: "Found in plain text: exposed codes on an Australian WordPress site"
 description: "How I came across sensitive codes sitting in plain text on a live WordPress site, what the risk was, and how it was reported."
 pubDate: 2026-10-12
 tags: ["web-security", "wordpress", "disclosure"]
-color: "black"
 draft: true
 ---
 

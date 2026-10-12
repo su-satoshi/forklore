@@ -14,8 +14,6 @@ const posts = defineCollection({
     // Optional cover image for the post card, e.g. /images/posts/my-post.jpg (put the file in public/images/posts/)
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
-    // Card colour when there is no cover image
-    color: z.enum(['orange', 'yellow', 'blue', 'purple', 'red', 'green', 'black']).optional(),
   }),
 });
 

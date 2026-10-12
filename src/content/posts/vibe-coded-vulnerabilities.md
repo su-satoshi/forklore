@@ -3,7 +3,6 @@ title: "Vibe-coded and vulnerable: prompt injection, CSRF, RCE and misconfigurat
 description: "The security bugs that keep showing up in projects built with Claude and ChatGPT, why the models produce them, and how to catch them before you ship."
 pubDate: 2026-10-12
 tags: ["ai-security", "web-security", "vibe-coding"]
-color: "red"
 ---
 
 "Vibe coding" means describing what you want and letting an AI model write the code. It is fast, and it gets you something that works. It does not get you something that is safe. The model optimises for "runs and looks right", and most security bugs are invisible until someone goes looking.

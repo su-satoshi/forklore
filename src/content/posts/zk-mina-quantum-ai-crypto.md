@@ -3,7 +3,6 @@ title: "zk-SNARKs, Mina, and what quantum computers and AI really threaten in cr
 description: "A tour of zero-knowledge blockchains like Mina, how SNARKs work, and which parts of cryptocurrency maths quantum computing and AI actually put at risk."
 pubDate: 2026-10-12
 tags: ["blockchain", "cryptography", "zero-knowledge"]
-color: "yellow"
 ---
 
 Most blockchains ask every participant to re-check everything. Zero-knowledge blockchains ask you to check a short proof instead. That shift is powerful, and it also changes which kinds of maths the whole system depends on, which matters a lot once you start asking what quantum computers and AI could break.
