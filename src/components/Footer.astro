@@ -4,6 +4,7 @@ import { SITE, url } from '../lib/site';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
+  <div class="panel">
   <div class="wrap footer-inner">
     <div class="brand">
       <LogoMark size="2.6rem" cursor />
@@ -27,6 +28,7 @@ const year = new Date().getFullYear();
     </div>
     <p class="copy">&copy; {year} ForkLore. Everything tested here is on systems I own or am authorised to test.</p>
   </div>
+  </div>
   <img
     class="cover"
     src={url('/images/forklore-cover.webp')}
@@ -40,6 +42,16 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer { margin-top: 112px; border-top: 1px solid var(--rule); }
+  /* The dark page ends in a rounded edge that sits over the collage */
+  .panel {
+    position: relative;
+    z-index: 1;
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--dots) 1px, transparent 1.4px);
+    background-size: 24px 24px;
+    background-attachment: fixed;
+    border-radius: 0 0 var(--page-radius) var(--page-radius);
+  }
   .footer-inner {
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr;
@@ -52,7 +64,8 @@ const year = new Date().getFullYear();
   .cols a { text-decoration-color: transparent; }
   .cols a:hover { background: none; color: var(--accent); }
   .copy { grid-column: 1 / -1; margin: 12px 0 0; padding-top: 20px; border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.88rem; }
-  .cover { width: 100%; aspect-ratio: 4 / 1; object-fit: cover; background: #ed6c1d; }
+  .site-footer { --page-radius: clamp(24px, 4vw, 48px); }
+  .cover { width: 100%; aspect-ratio: 4 / 1; object-fit: cover; background: #ed6c1d; margin-top: calc(-1 * var(--page-radius)); position: relative; z-index: 0; }
   @media (max-width: 720px) {
     .footer-inner { grid-template-columns: 1fr 1fr; }
     .brand { grid-column: 1 / -1; }
