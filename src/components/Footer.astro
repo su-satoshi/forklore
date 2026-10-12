@@ -1,0 +1,51 @@
+---
+import { SITE, url } from '../lib/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="sign">
+      Written and built by {SITE.author} in Melbourne. Follow the evidence, question the assumptions.
+    </p>
+    <ul class="links">
+      <li><a href={url('/rss.xml')}>RSS</a></li>
+      <li><a href={SITE.github} rel="me">GitHub</a></li>
+      <li><a href={SITE.coffee}>Buy me a coffee</a></li>
+    </ul>
+    <p class="copy">&copy; {year} ForkLore</p>
+  </div>
+  <img
+    class="cover"
+    src={url('/images/forklore-cover.webp')}
+    width="2400"
+    height="600"
+    loading="lazy"
+    decoding="async"
+    alt="ForkLore collage: a big yellow 'hi!' on orange, surrounded by a Melbourne tram, an equestrian statue, a retro error window, wifi and bug icons, a TV-headed figure in a red hat, and a Bitcoin sign reading 'I'm hodling it'."
+  />
+</footer>
+
+<style>
+  .site-footer { margin-top: 96px; border-top: 3px solid var(--ink); }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 32px;
+    padding-block: 28px 32px;
+    align-items: start;
+  }
+  .sign { margin: 0; max-width: 46ch; }
+  .links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-weight: 600; flex-wrap: wrap; }
+  .copy { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+  .cover {
+    width: 100%;
+    aspect-ratio: 4 / 1;
+    object-fit: cover;
+    border-top: 3px solid #000;
+    background: var(--orange);
+  }
+  @media (max-width: 640px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .cover { aspect-ratio: 2.4 / 1; object-position: 30% center; }
+  }
+</style>

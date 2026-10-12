@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import '../styles/prose.css';
+import { SITE, url } from '../lib/site';
+---
+<Base title="About" description="What ForkLore is and who writes it.">
+  <article class="wrap page">
+    <h1 class="page-title">About</h1>
+    <div class="prose">
+      <p>
+        ForkLore is an independent tech blog exploring cybersecurity, AI vulnerabilities, blockchain
+        cryptography, digital forensics and the hidden mechanics of online systems.
+      </p>
+      <p>
+        The name is a fork in two senses: the code you clone to see how something really works, and the
+        folklore that grows up around technology when nobody checks. Posts here try to separate the two.
+      </p>
+      <h2>Who writes it</h2>
+      <p>
+        I'm {SITE.author}, a Master of Cybersecurity student at RMIT. I write up what I learn from labs,
+        CTFs, coursework and my own projects. Everything tested here is tested on systems I own or am
+        authorised to test.
+      </p>
+      <h2>Get in touch</h2>
+      <p>
+        Find me on <a href={SITE.github}>GitHub</a>, follow along with the <a href={url("/rss.xml")}>RSS feed</a>, or
+        <a href={SITE.coffee}>buy me a coffee</a> if a post saved you some time.
+      </p>
+    </div>
+  </article>
+</Base>
+<style>
+  .page { padding-top: 48px; max-width: calc(68ch + 2 * var(--gutter)); }
+  .page-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 28px; }
+</style>

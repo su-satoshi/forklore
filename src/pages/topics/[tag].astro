@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts, slugify, url } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const tags = new Map<string, string>();
+  posts.forEach((p) => p.data.tags.forEach((t) => tags.set(slugify(t), t)));
+  return [...tags.entries()].map(([slug, name]) => ({
+    params: { tag: slug },
+    props: { name, posts: posts.filter((p) => p.data.tags.some((t) => slugify(t) === slug)) },
+  }));
+}
+const { name, posts } = Astro.props;
+---
+<Base title={`Posts about ${name}`} description={`ForkLore posts tagged ${name}.`}>
+  <div class="wrap page">
+    <p class="back"><a href={url('/topics')}>All topics</a></p>
+    <h1 class="page-title">{name}</h1>
+    <PostList posts={posts} />
+  </div>
+</Base>
+<style>
+  .page { padding-top: 40px; max-width: 860px; }
+  .back { margin: 0 0 8px; font-weight: 600; }
+  .page-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 28px; }
+</style>

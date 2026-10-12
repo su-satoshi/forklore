@@ -1,0 +1,66 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import '../../styles/prose.css';
+import { getPosts, url, slugify, formatDate, readingTime } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate, tags } = post.data;
+---
+<Base title={title} description={description} type="article">
+  <article class="wrap post">
+    <header class="post-head">
+      <p class="meta">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>, {readingTime(post)} min read
+        {updatedDate && <span>(updated {formatDate(updatedDate)})</span>}
+      </p>
+      <h1>{title}</h1>
+      <p class="lede">{description}</p>
+      {tags.length > 0 && (
+        <ul class="tags">{tags.map((t) => <li><a class="tag" href={url(`/topics/${slugify(t)}`)}>{t}</a></li>)}</ul>
+      )}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {(newer || older) && (
+      <nav class="pager" aria-label="More posts">
+        {older ? <a class="older" href={url(`/posts/${older.id}`)}><span>Older</span>{older.data.title}</a> : <span />}
+        {newer && <a class="newer" href={url(`/posts/${newer.id}`)}><span>Newer</span>{newer.data.title}</a>}
+      </nav>
+    )}
+  </article>
+</Base>
+
+<style>
+  .post { padding-top: 52px; max-width: calc(68ch + 2 * var(--gutter)); }
+  .post-head { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 3px solid var(--ink); }
+  .meta { margin: 0 0 12px; color: var(--ink-soft); font-size: 0.95rem; }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 6vw, 3.1rem);
+    line-height: 1.06;
+    letter-spacing: -0.005em;
+  }
+  .lede { font-size: 1.25rem; line-height: 1.5; margin: 18px 0 20px; color: var(--ink-soft); }
+  .pager {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-top: 64px; padding-top: 24px; border-top: 1.5px solid var(--rule);
+  }
+  .pager a { background: none; display: block; padding: 14px 16px; border: 2px solid var(--ink); border-radius: 4px; font-weight: 600; line-height: 1.35; }
+  .pager a:hover { background: var(--yellow); color: #000; border-color: #000; }
+  .pager span { display: block; font-weight: 400; font-size: 0.85rem; margin-bottom: 4px; }
+  .newer { text-align: right; }
+  @media (max-width: 560px) { .pager { grid-template-columns: 1fr; } .newer { text-align: left; } }
+</style>

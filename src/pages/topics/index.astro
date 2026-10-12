@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts, url, slugify } from '../../lib/site';
+const posts = await getPosts();
+const counts = new Map<string, number>();
+posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
+const topics = [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+---
+<Base title="Topics" description="Browse ForkLore posts by topic.">
+  <div class="wrap page">
+    <h1 class="page-title">Topics</h1>
+    {topics.length === 0 ? <p>No topics yet. Add <code>tags</code> to a post's front matter to create one.</p> : (
+      <ul class="topic-list">
+        {topics.map(([t, n]) => (
+          <li><a href={url(`/topics/${slugify(t)}`)}>{t}</a> <span>{n} {n === 1 ? 'post' : 'posts'}</span></li>
+        ))}
+      </ul>
+    )}
+  </div>
+</Base>
+<style>
+  .page { padding-top: 48px; max-width: 860px; }
+  .page-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 28px; }
+  .topic-list { list-style: none; padding: 0; margin: 0; columns: 2 260px; column-gap: 40px; }
+  .topic-list li { break-inside: avoid; padding: 10px 0; border-bottom: 1.5px solid var(--rule); display: flex; justify-content: space-between; gap: 12px; }
+  .topic-list a { font-size: 1.2rem; font-weight: 600; }
+  .topic-list span { color: var(--ink-soft); font-size: 0.92rem; }
+</style>
