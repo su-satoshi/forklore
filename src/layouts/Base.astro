@@ -25,6 +25,12 @@ const ogImage = new URL(url('/images/og.jpg'), Astro.site);
 <html lang="en-AU">
   <head>
     <meta charset="utf-8" />
+    <!-- Only load scripts, styles, fonts and images from this site; forms may post to the mailing list service -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'self' https://api.follow.it; base-uri 'self'; object-src 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -39,9 +45,6 @@ const ogImage = new URL(url('/images/og.jpg'), Astro.site);
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#f3efe4" />
-    {SITE.goatcounter && (
-      <script is:inline data-goatcounter={`https://${SITE.goatcounter}.goatcounter.com/count`} async src="https://gc.zgo.at/count.js"></script>
-    )}
     <script is:inline>
       try {
         const t = localStorage.getItem('forklore-theme');
@@ -51,8 +54,10 @@ const ogImage = new URL(url('/images/og.jpg'), Astro.site);
   </head>
   <body>
     <a class="skip" href="#content">Skip to content</a>
-    <Header />
-    <Masthead home={isHome} />
+    <header>
+      <Header />
+      <Masthead home={isHome} />
+    </header>
     <main id="content">
       <slot />
     </main>

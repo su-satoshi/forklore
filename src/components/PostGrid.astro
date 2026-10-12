@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import PostCard from './PostCard.astro';
 import { slugify } from '../lib/site';
+import { SLOTS, chunk } from '../lib/bento';
 
 interface Props {
   posts: CollectionEntry<'posts'>[];
@@ -16,37 +17,23 @@ const latestId = posts.find((p) => !p.data.pinned)?.id;
 const counts = new Map<string, number>();
 posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
 const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-
-// Bento layout: posts go into blocks of up to six. Each block size has its own
-// pattern (see the CSS below) so every column in a block ends on the same line.
-// Slot order: the first post in a block takes the wide top slot (d), the second
-// the tall slot (c), then the small ones.
-const SLOTS: Record<number, string[]> = {
-  6: ['d', 'c', 'a', 'b', 'e', 'f'],
-  5: ['d', 'c', 'a', 'b', 'e'],
-  4: ['d', 'c', 'e', 'f'],
-  3: ['d', 'c', 'e'],
-  2: ['d', 'c'],
-  1: ['d'],
-};
-const blocks: CollectionEntry<'posts'>[][] = [];
-for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
+const blocks = chunk(posts);
 ---
 {filters && (
   <section class="bar" aria-label="Filter posts">
-    <div class="bar-tab">
+    <div class="bar-search">
       <label class="search">
         <span class="visually-hidden">Search posts</span>
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <input type="search" placeholder="Search posts" autocomplete="off" />
       </label>
     </div>
-    {heading && <h2 class="bar-title">{heading}</h2>}
+    {heading && <h1 class="bar-title">{heading}</h1>}
     {intro && <p class="bar-intro">{intro}</p>}
     <div class="filters" role="group" aria-label="Topics">
-      <button type="button" class="pill" aria-pressed="true" data-tag="" data-goatcounter-click="filter-all">All <span>{posts.length}</span></button>
+      <button type="button" class="pill" aria-pressed="true" data-tag="">All <span>{posts.length}</span></button>
       {topics.map(([t, n]) => (
-        <button type="button" class="pill" aria-pressed="false" data-tag={slugify(t)} data-goatcounter-click={`filter-${slugify(t)}`}>{t} <span>{n}</span></button>
+        <button type="button" class="pill" aria-pressed="false" data-tag={slugify(t)}>{t} <span>{n}</span></button>
       ))}
     </div>
   </section>
@@ -56,7 +43,7 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
   <p class="empty">No posts yet. Add a Markdown file to <code>src/content/posts</code> and it will show up here.</p>
 ) : (
   <div class="bento">
-    {blocks.map((block, b) => (
+    {blocks.map((block) => (
       <div class={`block n${block.length}`}>
         {block.map((post, i) => <PostCard post={post} latest={post.id === latestId} slot={SLOTS[block.length][i]} />)}
       </div>
@@ -66,20 +53,16 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
 <p class="no-match" hidden>No posts match that. Try another topic or a different search.</p>
 
 <script>
+  import { SLOTS, chunk } from '../lib/bento';
   const bar = document.querySelector('.bar');
   if (bar) {
     const bento = document.querySelector<HTMLElement>('.bento');
     const cards = [...document.querySelectorAll<HTMLElement>('.bento .card')];
-    const SLOTS: Record<number, string[]> = {
-      6: ['d', 'c', 'a', 'b', 'e', 'f'], 5: ['d', 'c', 'a', 'b', 'e'], 4: ['d', 'c', 'e', 'f'],
-      3: ['d', 'c', 'e'], 2: ['d', 'c'], 1: ['d'],
-    };
     // Rebuild the blocks from the cards that are still visible, so filtered results keep a flush layout
     const relayout = (visible: HTMLElement[]) => {
       if (!bento) return;
       bento.replaceChildren();
-      for (let i = 0; i < visible.length; i += 6) {
-        const group = visible.slice(i, i + 6);
+      for (const group of chunk(visible)) {
         const block = document.createElement('div');
         block.className = `block n${group.length}`;
         group.forEach((c, j) => { c.dataset.slot = SLOTS[group.length][j]; block.append(c); });
@@ -102,7 +85,6 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
       apply();
     }));
     input?.addEventListener('input', apply);
-
   }
 </script>
 
@@ -117,7 +99,7 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     margin: 0 0 16px;
   }
   /* Search spans the full width of the box */
-  .bar-tab { width: 100%; margin: 0 0 18px; }
+  .bar-search { width: 100%; margin: 0 0 18px; }
   .bar-title {
     font-family: var(--font-display);
     font-weight: 900;
@@ -126,11 +108,12 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     line-height: 1;
     margin: 0 0 12px;
   }
-  .bar-intro { margin: 0 0 20px; max-width: none; color: rgba(243, 239, 228, 0.78); line-height: 1.55; }
+  .bar-intro { margin: 0 0 20px; color: rgba(243, 239, 228, 0.78); line-height: 1.55; }
   /* Topics wrap across the full width of the box, left aligned */
   .filters { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
-  .pill { flex: none; white-space: nowrap; }
   .pill {
+    flex: none;
+    white-space: nowrap;
     font: inherit;
     font-size: 0.9rem;
     font-weight: 600;
@@ -139,7 +122,6 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     border: 0;
     background: #26272d;
     color: #f3efe4;
-   
   }
   .pill span { opacity: 0.6; font-weight: 400; margin-left: 2px; }
   .pill:hover { background: #3a3b42; }
@@ -157,8 +139,8 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
   .search input { flex: 1; min-width: 0; border: 0; background: none; color: #f3efe4; font: inherit; font-size: 0.95rem; outline: none; }
   .search input::placeholder { color: rgba(243, 239, 228, 0.5); }
 
-  /* Blocks are rebuilt by script when filtering, so their rules are global (scoped under .bento) */
-  /* Bento blocks: sizes vary, but every column in a block ends on the same line */
+  /* Bento blocks: sizes vary, but every column in a block ends on the same line.
+     Blocks are rebuilt by script when filtering, so their rules are global (scoped under .bento). */
   .bento { display: grid; gap: 16px; }
   .bento :global(.block) { display: grid; gap: 16px; grid-auto-rows: minmax(250px, auto); }
   .bento :global(.block > [data-slot='a']) { grid-area: a; }
@@ -186,5 +168,4 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     .bento :global(.block > .card) { grid-area: auto !important; }
   }
   .empty, .no-match { padding: 24px; border: 2px dashed var(--ink-soft); border-radius: 20px; }
-  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>

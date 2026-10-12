@@ -69,10 +69,6 @@ The footer has a "Subscribe to the mailing list" form. Until it's connected, sub
 
 From then on, follow.it emails subscribers automatically whenever a new post appears in the RSS feed.
 
-## Analytics (optional, off)
-
-Tracking is switched off. To turn on GoatCounter later, sign up at goatcounter.com and put your code in `goatcounter` in `src/lib/site.ts`. Post cards, topic filters and footer links are already tagged for click counts.
-
 ## Custom domain
 
 To move to your own domain later, add it under Settings > Pages, then in `astro.config.mjs` set `site` to the new domain and remove the `base` line.

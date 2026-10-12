@@ -9,7 +9,7 @@ const href = url(`/posts/${post.id}`);
 const topic = tags[0];
 ---
 <article
-  class:list={['card', { latest, pinned }]}
+  class="card"
   data-slot={slot}
   data-tags={tags.map(slugify).join(' ')}
   data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}
@@ -25,7 +25,7 @@ const topic = tags[0];
           ? <a class="badge" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>
           : <span class="badge">Post</span>}
     </span>
-    <h3 class="title"><a href={href} data-goatcounter-click={`card-${post.id}`} data-goatcounter-title={title}>{title}</a></h3>
+    <h2 class="title"><a href={href}>{title}</a></h2>
     <p class="desc">{description}</p>
     <p class="meta">
       {(latest || pinned) && topic && <a class="chip" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>}
@@ -36,7 +36,7 @@ const topic = tags[0];
 </article>
 
 <style>
-  /* Orange card; the white panel sits at the bottom with orange space above it */
+  /* Orange card; the white panel fills it below a band of orange */
   .card {
     --r: 28px;
     --tab-r: 16px;
@@ -141,7 +141,7 @@ const topic = tags[0];
   }
   /* The tall slot has room to show more of the description */
   .card[data-slot='c'] .desc { -webkit-line-clamp: 9; }
-  .meta { margin-top: auto !important; padding-top: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin: 0; font-size: 0.82rem; color: var(--ink-soft); }
+  .meta { margin: auto 0 0; padding-top: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; font-size: 0.82rem; color: var(--ink-soft); }
   .chip {
     position: relative;
     z-index: 1;

@@ -3,8 +3,7 @@
 // Layers are listed bottom to top, positioned on the original 1200 x 300 artboard.
 import { url } from '../lib/site';
 
-// bug and star extend above the frame (negative y): they sit cut off at the top edge,
-// and show in full only while they move.
+// The star and bug extend above the frame (negative y) and are cut off at the top edge, as in the artwork.
 const layers = [
   { name: 'bg',     x: 0,   y: 0,   w: 1200, h: 300 },
   { name: 'cloud1', x: 770, y: 144, w: 306,  h: 156 },
@@ -63,7 +62,6 @@ const box = (l: { x: number; y: number; w: number }) => `left:${pct(l.x, W)};top
 </div>
 
 <script>
-
   // Only animate on large screens, and only while the collage is on screen.
   const el = document.querySelector('.collage');
   const large = matchMedia('(min-width: 1025px)');
@@ -85,8 +83,7 @@ const box = (l: { x: number; y: number; w: number }) => `left:${pct(l.x, W)};top
     .stage-wrap { display: block; }
   }
   .defs { position: absolute; width: 0; height: 0; }
-  .layer { position: absolute; height: auto; max-width: none; user-select: none; -webkit-user-drag: none; }
-  .layer { animation-play-state: paused !important; }
+  .layer { position: absolute; height: auto; max-width: none; user-select: none; -webkit-user-drag: none; animation-play-state: paused !important; }
   .playing .layer { animation-play-state: running !important; }
 
   /* Fire: heat-warped flames, a flickering glow, and embers drifting off */
@@ -154,5 +151,4 @@ const box = (l: { x: number; y: number; w: number }) => `left:${pct(l.x, W)};top
     .layer, .fire * { animation: none !important; opacity: 1 !important; transform: none !important; }
     .ember { display: none; }
   }
-
 </style>

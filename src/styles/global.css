@@ -4,7 +4,6 @@
   --yellow: #ffde59;
   --blue: #0386fa;
   --red: #f24841;
-  --black: #000;
 
   --paper: #f3efe4;      /* the grid-paper cloud cutouts */
   --ink: #000;
@@ -138,7 +137,12 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; }
 }
 
 /* Urbanist Black: heavy, round geometric headings (Open Font License) */
-h1, h2, h3, .page-title {
-  letter-spacing: -0.01em;
-  text-transform: none;
+h1, h2, h3 { letter-spacing: -0.01em; }
+
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+  letter-spacing: -0.015em;
+  margin-bottom: 28px;
 }
