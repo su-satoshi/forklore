@@ -25,7 +25,7 @@ const topic = tags[0];
           ? <a class="badge" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>
           : <span class="badge">Post</span>}
     </span>
-    <h3 class="title"><a href={href}>{title}</a></h3>
+    <h3 class="title"><a href={href} data-goatcounter-click={`card-${post.id}`} data-goatcounter-title={title}>{title}</a></h3>
     <p class="desc">{description}</p>
     <p class="meta">
       {(latest || pinned) && topic && <a class="chip" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>}

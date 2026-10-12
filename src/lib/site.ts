@@ -11,6 +11,9 @@ export const SITE = {
   // subscription form code here (it looks like https://api.follow.it/subscription-form/.../8).
   // While it's empty, the form can be typed in but submitting only shows a "sign-ups open soon" note.
   newsletterAction: '',
+  // Analytics via GoatCounter. Put your GoatCounter code here (the part before .goatcounter.com,
+  // e.g. 'forklore' for forklore.goatcounter.com). While it's empty, nothing is tracked.
+  goatcounter: '',
 };
 
 /** Prefix a path with the site base (/forklore) so links work locally and on GitHub Pages. */

@@ -39,6 +39,9 @@ const ogImage = new URL(url('/images/og.jpg'), Astro.site);
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#f3efe4" />
+    {SITE.goatcounter && (
+      <script is:inline data-goatcounter={`https://${SITE.goatcounter}.goatcounter.com/count`} async src="https://gc.zgo.at/count.js"></script>
+    )}
     <script is:inline>
       try {
         const t = localStorage.getItem('forklore-theme');
