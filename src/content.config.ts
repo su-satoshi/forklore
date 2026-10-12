@@ -11,6 +11,8 @@ const posts = defineCollection({
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    // Pinned posts stay first on the home page
+    pinned: z.boolean().default(false),
     // Optional cover image for the post card, e.g. /images/posts/my-post.jpg (put the file in public/images/posts/)
     cover: z.string().optional(),
     coverAlt: z.string().optional(),

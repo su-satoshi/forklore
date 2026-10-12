@@ -9,7 +9,10 @@ interface Props {
   heading?: string;
   intro?: string;
 }
-const { posts, filters = false, heading, intro } = Astro.props;
+const { posts: input, filters = false, heading, intro } = Astro.props;
+// Pinned posts first, then everything else newest first (input is already sorted by date)
+const posts = [...input.filter((p) => p.data.pinned), ...input.filter((p) => !p.data.pinned)];
+const latestId = posts.find((p) => !p.data.pinned)?.id;
 const counts = new Map<string, number>();
 posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
 const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
@@ -55,7 +58,7 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
   <div class="bento">
     {blocks.map((block, b) => (
       <div class={`block n${block.length}`}>
-        {block.map((post, i) => <PostCard post={post} latest={b === 0 && i === 0} slot={SLOTS[block.length][i]} />)}
+        {block.map((post, i) => <PostCard post={post} latest={post.id === latestId} slot={SLOTS[block.length][i]} />)}
       </div>
     ))}
   </div>
@@ -130,7 +133,7 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     border: 0;
     background: #26272d;
     color: #f3efe4;
-    cursor: pointer;
+   
   }
   .pill span { opacity: 0.6; font-weight: 400; margin-left: 2px; }
   .pill:hover { background: #3a3b42; }

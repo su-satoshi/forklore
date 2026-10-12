@@ -4,12 +4,12 @@ import { url, slugify, formatDate, readingTime } from '../lib/site';
 
 interface Props { post: CollectionEntry<'posts'>; latest?: boolean; slot?: string }
 const { post, latest = false, slot = 'd' } = Astro.props;
-const { title, description, pubDate, tags, cover, coverAlt, draft } = post.data;
+const { title, description, pubDate, tags, cover, coverAlt, draft, pinned } = post.data;
 const href = url(`/posts/${post.id}`);
 const topic = tags[0];
 ---
 <article
-  class:list={['card', { latest }]}
+  class:list={['card', { latest, pinned }]}
   data-slot={slot}
   data-tags={tags.map(slugify).join(' ')}
   data-search={`${title} ${description} ${tags.join(' ')}`.toLowerCase()}
@@ -17,7 +17,9 @@ const topic = tags[0];
   {cover && <img class="cover" src={url(cover)} alt={coverAlt ?? ''} loading="lazy" decoding="async" />}
   <div class="panel">
     <span class="tab">
-      {latest
+      {pinned
+        ? <span class="badge">Pinned</span>
+        : latest
         ? <span class="badge">Latest</span>
         : topic
           ? <a class="badge" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>
@@ -26,7 +28,7 @@ const topic = tags[0];
     <h3 class="title"><a href={href}>{title}</a></h3>
     <p class="desc">{description}</p>
     <p class="meta">
-      {latest && topic && <a class="chip" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>}
+      {(latest || pinned) && topic && <a class="chip" href={url(`/topics/${slugify(topic)}`)}>{topic}</a>}
       {draft && <span class="draft">Draft</span>}
       <span><time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>, {readingTime(post)} min read</span>
     </p>
@@ -119,7 +121,8 @@ const topic = tags[0];
     margin: 0;
     overflow-wrap: break-word;
   }
-  .latest .title { font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
+  /* Whichever post lands in the wide slot gets the bigger title */
+  .card[data-slot='d'] .title { font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
   .title a { background-size: 100% 0; }
   .title a::after { content: ''; position: absolute; inset: 0; z-index: 0; }
   .title a:hover { background-size: 100% 0.32em; }

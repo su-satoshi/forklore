@@ -3,6 +3,7 @@ title: "Hello, ForkLore"
 description: "What this blog is for, what I'll be writing about, and how posts here are put together."
 pubDate: 2026-10-11
 tags: ["meta", "cybersecurity"]
+pinned: true
 ---
 
 Welcome to ForkLore. This is where I write up what I find while poking at security, AI systems, blockchains and the parts of the internet most people never look at.

@@ -10,8 +10,9 @@ Live at **https://su-satoshi.github.io/forklore/**
 2. Fill in the front matter (`title`, `description`, `pubDate`, `tags`).
 3. Optional, for the post's card on the home page:
    - `cover: "/images/posts/my-post.jpg"` and `coverAlt: "..."` to show an image on the card (put the file in `public/images/posts/`); without one the card is plain orange
-4. Delete `draft: true` when it's ready to go live.
-5. Commit and push to `main`. GitHub Actions builds and deploys the site in a minute or two.
+4. Add `pinned: true` to keep a post first on the home page.
+5. Delete `draft: true` when it's ready to go live.
+6. Commit and push to `main`. The new post slots into the bento grid automatically. GitHub Actions builds and deploys the site in a minute or two.
 
 Images for posts go in `public/images/` and are referenced as `/forklore/images/your-image.png`.
 
