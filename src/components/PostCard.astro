@@ -115,14 +115,14 @@ const topic = tags[0];
   .title {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(1.2rem, 1.7vw, 1.45rem);
-    line-height: 1.12;
-    letter-spacing: 0.005em;
+    font-size: clamp(1.1rem, 1.55vw, 1.3rem);
+    line-height: 1.15;
+    letter-spacing: 0.02em;
     margin: 0;
     overflow-wrap: break-word;
   }
   /* Whichever post lands in the wide slot gets the bigger title */
-  .card[data-slot='d'] .title { font-size: clamp(1.5rem, 2.6vw, 2.1rem); }
+  .card[data-slot='d'] .title { font-size: clamp(1.35rem, 2.3vw, 1.85rem); }
   .title a { background-size: 100% 0; }
   .title a::after { content: ''; position: absolute; inset: 0; z-index: 0; }
   .title a:hover { background-size: 100% 0.32em; }

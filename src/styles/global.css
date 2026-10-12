@@ -16,7 +16,7 @@
   --link-mark: var(--yellow);
   --surface: #fffdf7;
 
-  --font-display: 'Lilita One', 'Arial Rounded MT Bold', sans-serif;
+  --font-display: 'Luckiest Guy', 'Arial Black', sans-serif;
   --font-body: 'Montserrat Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-code: 'JetBrains Mono Variable', ui-monospace, monospace;
 
@@ -137,9 +137,9 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
-/* Lilita One: playful, comic-style headings that stay readable */
+/* Luckiest Guy: chunky, hand-drawn comic headings (Apache 2.0 licence) */
 h1, h2, h3, .page-title {
-  letter-spacing: 0.005em;
+  letter-spacing: 0.02em;
 }
 
 /* Bug cursor (mouse and trackpad only). Text fields keep the normal text cursor. */
