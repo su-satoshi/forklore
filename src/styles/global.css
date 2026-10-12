@@ -142,15 +142,3 @@ h1, h2, h3, .page-title {
   letter-spacing: -0.01em;
   text-transform: none;
 }
-
-/* Bug cursor (mouse and trackpad only). Text fields keep the normal text cursor. */
-@media (pointer: fine) {
-  html,
-  a, button, label, select, summary, [role='button'] {
-    cursor: url('../assets/bug-cursor.png') 16 16, auto;
-    cursor: image-set(url('../assets/bug-cursor.png') 1x, url('../assets/bug-cursor@2x.png') 2x) 16 16, auto;
-  }
-  input[type='search'], input[type='text'], input[type='email'], textarea {
-    cursor: text;
-  }
-}
