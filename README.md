@@ -50,7 +50,7 @@ The logo mark is `src/components/LogoMark.astro`; standalone SVGs are in `public
 
 ## Footer collage
 
-The footer art is the cover collage split into layers in `public/images/collage/` (one static `base.webp` plus a file per moving piece). Positions and animations live in `src/components/Collage.astro`. Animations only run while the footer is on screen and switch off for readers who prefer reduced motion.
+The footer art is the cover collage split into layers in `public/images/collage/` (static `bg`, `scene` and `scene2` layers plus one file per moving piece, stacked in the original order). Positions and animations live in `src/components/Collage.astro`. Animations only run while the footer is on screen and switch off for readers who prefer reduced motion.
 
 ## Deployment
 
