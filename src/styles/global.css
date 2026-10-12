@@ -16,8 +16,8 @@
   --link-mark: var(--yellow);
   --surface: #fffdf7;
 
-  --font-display: 'Bowlby One', 'Arial Black', sans-serif;
-  --font-body: 'Literata Variable', Georgia, serif;
+  --font-display: 'Bangers', 'Impact', sans-serif;
+  --font-body: 'Montserrat Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-code: 'JetBrains Mono Variable', ui-monospace, monospace;
 
   --measure: 68ch;
@@ -66,7 +66,7 @@ body {
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.65;
   font-optical-sizing: auto;
   min-height: 100vh;
@@ -135,4 +135,9 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* Comic-style headings: Bangers is drawn in capitals and likes a little air between letters */
+h1, h2, h3, .page-title {
+  letter-spacing: 0.03em;
 }
