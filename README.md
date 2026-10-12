@@ -28,24 +28,29 @@ npm run build    # production build into dist/
 | Path | What it is |
 | --- | --- |
 | `src/content/posts/` | Blog posts in Markdown |
-| `src/styles/global.css` | Brand colours, fonts, dark/light themes |
+| `src/styles/global.css` | Colour palette, fonts, grid-paper background |
 | `src/styles/prose.css` | How post text, code blocks and quotes look |
 | `src/components/` | Header, footer, post list, `LogoMark` (the branching-node logo) |
 | `public/brand/` | Logo mark and app icon as SVG |
 | `src/pages/` | Home, posts, topics, about, RSS feed |
 | `src/lib/site.ts` | Site name, author, social links |
-| `public/images/forklore-cover.webp` | Footer cover art |
 
 ## Brand
 
 | Colour | Hex | Use |
 | --- | --- | --- |
-| Background | `#12071F` | Page background (dark mode) |
-| Violet | `#8B6CFF` | Labels, metadata, `// comments` |
-| Cream | `#F8F3EA` | Text, and background in light mode |
-| Orange | `#FF8A3D` | Logo node, cursor, links |
+| Orange | `#ED6C1D` | Header band, accents |
+| Yellow | `#FFDE59` | Logo paper scrap, link highlights |
+| Paper | `#F3EFE4` | Grid-paper page background |
+| Ink | `#000000` | Text, rules, logo |
 
-Fonts: Fraunces (headings and body) and JetBrains Mono (labels and code), both self-hosted.
+Fonts: Bowlby One (headings), Literata (body), Fraunces (logo wordmark), JetBrains Mono (code). All self-hosted.
+
+The logo mark is `src/components/LogoMark.astro`; standalone SVGs are in `public/brand/`.
+
+## Footer collage
+
+The footer art is the cover collage split into layers in `public/images/collage/` (one static `base.webp` plus a file per moving piece). Positions and animations live in `src/components/Collage.astro`. Animations only run while the footer is on screen and switch off for readers who prefer reduced motion.
 
 ## Deployment
 

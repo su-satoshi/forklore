@@ -1,0 +1,215 @@
+---
+// The ForkLore cover collage, split into layers so pieces can move.
+// Positions are in the original 1200 x 300 artboard; CSS converts them to percentages.
+import { url } from '../lib/site';
+
+const layers = [
+  { name: 'wifi',    x: 478, y: 22,  w: 100, h: 100 },
+  { name: 'plant',   x: 588, y: 84,  w: 53,  h: 120 },
+  { name: 'figure',  x: 560, y: 71,  w: 202, h: 229 },
+  { name: 'error',   x: 148, y: 114, w: 183, h: 127 },
+  { name: 'glasses', x: 627, y: 77,  w: 68,  h: 69 },
+  { name: 'hat',     x: 656, y: 64,  w: 53,  h: 40 },
+  { name: 'bug',     x: 813, y: 0,   w: 140, h: 108 },
+  { name: 'statue',  x: 0,   y: 48,  w: 169, h: 252 },
+  { name: 'tram',    x: 54,  y: 47,  w: 444, h: 253 },
+  { name: 'cloud',   x: 196, y: 22,  w: 175, h: 90 },
+  { name: 'note1',   x: 730, y: 103, w: 34,  h: 42 },
+  { name: 'note2',   x: 760, y: 94,  w: 26,  h: 32 },
+  { name: 'spark',   x: 0,   y: 0,   w: 74,  h: 73 },
+  { name: 'star',    x: 611, y: 0,   w: 137, h: 62 },
+  { name: 'bolt',    x: 293, y: 113, w: 50,  h: 81 },
+];
+// Two piano keys on the music box that press in time with the notes
+const keys = [
+  { kind: 'black', x: 751.4, y: 182.4, w: 6.8, h: 19 },
+  { kind: 'white', x: 769.4, y: 177.4, w: 5.6, h: 27 },
+];
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+---
+<div class="collage" role="img" aria-label="ForkLore collage: a big yellow 'hi!' on orange, with a Melbourne tram, an equestrian statue, a retro error window, a wifi symbol, a bug, a TV-headed figure in a red hat and pixel sunglasses, and a Bitcoin sign reading 'I'm hodling it'.">
+  <div class="stage">
+    <img class="base" src={url('/images/collage/base.webp')} width="2400" height="600" alt="" loading="lazy" decoding="async" />
+    {keys.map((k, i) => (
+      <span
+        class={`key ${k.kind} key${i + 1}`}
+        aria-hidden="true"
+        style={`left:${pct(k.x, 1200)};top:${pct(k.y, 300)};width:${pct(k.w, 1200)};height:${pct(k.h, 300)}`}
+      ></span>
+    ))}
+    {layers.map((l) => (
+      <img
+        class={`layer ${l.name}`}
+        src={url(`/images/collage/${l.name}.webp`)}
+        width={l.w * 2}
+        height={l.h * 2}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        style={`left:${pct(l.x, 1200)};top:${pct(l.y, 300)};width:${pct(l.w, 1200)}`}
+      />
+    ))}
+  </div>
+</div>
+
+<script>
+  // Only animate while the collage is on screen.
+  const el = document.querySelector('.collage');
+  if (el && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => el.classList.toggle('playing', e.isIntersecting), { threshold: 0.1 }).observe(el);
+  } else {
+    el?.classList.add('playing');
+  }
+</script>
+
+<style>
+  .collage { position: relative; overflow: hidden; background: #ff751f; }
+  .stage { position: relative; width: 100%; aspect-ratio: 4 / 1; }
+  .base { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .layer { position: absolute; height: auto; max-width: none; will-change: transform; }
+  .layer, .base { user-select: none; -webkit-user-drag: none; }
+
+  .layer { animation-play-state: paused; }
+  .playing .layer { animation-play-state: running; }
+
+  /* Tram rumbles along its track and back */
+  .tram { animation: tram 9s ease-in-out infinite; }
+  @keyframes tram {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(0.4%, -0.6px); }
+    20% { transform: translate(1.2%, 0); }
+    30% { transform: translate(2%, -0.6px); }
+    45%, 55% { transform: translate(2.6%, 0); }
+    70% { transform: translate(1.2%, -0.6px); }
+    85% { transform: translate(0.3%, 0); }
+  }
+
+  /* Wifi signal pulses */
+  .wifi { transform-origin: 50% 90%; animation: wifi 2.4s ease-in-out infinite; }
+  @keyframes wifi {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.06); filter: brightness(1.25); }
+  }
+
+  /* Bug crawls down out of frame, then reappears where it started */
+  .bug { transform-origin: 50% 50%; animation: bug-crawl 11s linear infinite, bug-legs 0.28s steps(2) infinite; }
+  @keyframes bug-crawl {
+    0%, 14% { translate: 0 0; rotate: 0deg; opacity: 1; }
+    20% { translate: 0 6%; rotate: 180deg; }
+    40% { translate: -10% 110%; rotate: 172deg; }
+    58% { translate: 6% 210%; rotate: 186deg; }
+    70% { translate: 0 320%; rotate: 180deg; opacity: 1; }
+    70.1% { translate: 0 0; rotate: 0deg; opacity: 0; }
+    80%, 100% { translate: 0 0; rotate: 0deg; opacity: 1; }
+  }
+  @keyframes bug-legs {
+    0% { transform: rotate(-4deg); }
+    100% { transform: rotate(4deg); }
+  }
+
+  /* Purple asterisk spins slowly */
+  .star { transform-origin: 50% 0%; animation: spin 24s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Spark flickers */
+  .spark { transform-origin: 0 0; animation: spark 1.8s ease-in-out infinite; }
+  @keyframes spark {
+    0%, 100% { transform: scale(1) rotate(0); }
+    50% { transform: scale(1.12) rotate(-6deg); }
+  }
+
+  /* Lightning bolt blinks every 2.5 seconds */
+  .bolt { animation: bolt 2.5s steps(1) infinite; }
+  @keyframes bolt {
+    0%, 100% { opacity: 1; transform: none; }
+    84% { opacity: 0; }
+    88% { opacity: 1; transform: scale(1.08); }
+    92% { opacity: 0; }
+    96% { opacity: 1; transform: none; }
+  }
+
+  /* Error window shakes, like a rejected click */
+  .error { animation: shake 5s ease-in-out infinite; }
+  @keyframes shake {
+    0%, 82%, 100% { transform: translateX(0); }
+    84% { transform: translateX(-1.5%); }
+    86% { transform: translateX(1.5%); }
+    88% { transform: translateX(-1%); }
+    90% { transform: translateX(1%); }
+    92% { transform: translateX(0); }
+  }
+
+  /* Plant sways */
+  .plant { transform-origin: 50% 100%; animation: sway 5s ease-in-out infinite; }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+
+  /* TV-head figure bobs to the music, hat and glasses ride along */
+  .figure, .hat, .glasses { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1.6%); }
+  }
+  /* Sunglasses drop in, "deal with it" style */
+  .glasses { animation: bob 1.6s ease-in-out infinite, shades 8s ease-in infinite; }
+  @keyframes shades {
+    0%, 12% { translate: 0 -240%; opacity: 0; }
+    13% { translate: 0 -240%; opacity: 1; }
+    26%, 90% { translate: 0 0; opacity: 1; }
+    94%, 100% { translate: 0 0; opacity: 0; }
+  }
+  /* Hat tips once in a while */
+  .hat { transform-origin: 20% 90%; animation: bob 1.6s ease-in-out infinite, tip 8s ease-in-out infinite; }
+  @keyframes tip {
+    0%, 40%, 56%, 100% { rotate: 0deg; }
+    46%, 50% { rotate: -14deg; translate: 0 -12%; }
+  }
+
+  /* Music notes float up from the piano box, each one after a key press */
+  .note1, .note2 { animation: note 3.4s ease-out infinite; }
+  .note2 { animation-delay: 1.7s; }
+  @keyframes note {
+    0% { transform: translate(0, 30%) rotate(-6deg); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translate(18%, -110%) rotate(10deg); opacity: 0; }
+  }
+
+  /* Piano keys press down in time with the notes */
+  .key {
+    position: absolute;
+    transform: skewY(18deg);
+    transform-origin: 0 0;
+    opacity: 0;
+    pointer-events: none;
+    animation: press 3.4s ease-out infinite;
+    animation-play-state: paused;
+  }
+  .playing .key { animation-play-state: running; }
+  .key.black { background: linear-gradient(#cfe3f5 0 14%, #04041c 14%); border-radius: 0 0 1px 1px; }
+  .key.white { background: rgba(10, 20, 60, 0.38); }
+  .key2 { animation-delay: 1.7s; }
+  @keyframes press {
+    0% { opacity: 1; }
+    16% { opacity: 1; }
+    24%, 100% { opacity: 0; }
+  }
+
+  /* Cloud drifts */
+  .cloud { animation: drift 12s ease-in-out infinite; }
+  @keyframes drift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6%); }
+  }
+
+  @media (max-width: 640px) {
+    .stage { width: 166%; margin-left: -8%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .layer { animation: none !important; translate: none !important; rotate: none !important; opacity: 1 !important; }
+    .key { display: none; }
+  }
+</style>

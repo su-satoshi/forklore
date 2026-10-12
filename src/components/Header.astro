@@ -1,28 +1,33 @@
 ---
 import LogoMark from './LogoMark.astro';
 import { url } from '../lib/site';
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const path = Astro.url.pathname.replace(base, '') || '/';
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const isHome = path === '/' || path === '';
 const nav = [
   { href: '/posts', label: 'Posts' },
   { href: '/topics', label: 'Topics' },
   { href: '/about', label: 'About' },
 ];
+const Tag = isHome ? 'h1' : 'p';
 ---
-<header class="site-header">
-  <div class="wrap bar">
-    <a class="lockup" href={url('/')} aria-label="ForkLore home">
-      <LogoMark size="2.1rem" />
-      <span class="name">FORK LORE<span class="cursor" aria-hidden="true"></span></span>
-    </a>
+<header class="masthead">
+  <div class="wrap masthead-inner">
+    <Tag class="wordmark">
+      <a href={url('/')} aria-label="ForkLore home">
+        <span class="scrap" aria-hidden="true"></span>
+        <span class="word"><LogoMark class="mark-icon" size="0.95em" /><span>FORK LORE</span></span>
+      </a>
+    </Tag>
     <nav aria-label="Main">
       <ul>
         {nav.map((n) => (
-          <li><a href={url(n.href)} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a></li>
+          <li>
+            <a href={url(n.href)} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a>
+          </li>
         ))}
         <li>
-          <button class="theme" type="button" aria-label="Switch between dark and light mode">
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
+          <button class="theme" type="button" aria-label="Toggle dark mode">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
           </button>
         </li>
       </ul>
@@ -31,35 +36,79 @@ const nav = [
 </header>
 
 <script>
-  document.querySelector('.theme')?.addEventListener('click', () => {
+  const btn = document.querySelector<HTMLButtonElement>('.theme');
+  btn?.addEventListener('click', () => {
     const root = document.documentElement;
-    const light = root.dataset.theme !== 'light';
-    if (light) root.dataset.theme = 'light'; else delete root.dataset.theme;
-    try { localStorage.setItem('forklore-theme', light ? 'light' : 'dark'); } catch (e) {}
+    const current = root.dataset.theme
+      ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('forklore-theme', next); } catch (e) {}
   });
 </script>
 
 <style>
-  .site-header { border-bottom: 1px solid var(--rule); background: color-mix(in srgb, var(--bg) 88%, transparent); }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding-block: 16px; }
-  .lockup { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; padding: 4px 6px 4px 0; }
-  .lockup:hover { background: none; color: inherit; }
-  .name {
+  .masthead {
+    background: var(--orange);
+    color: #000;
+    border-bottom: 3px solid #000;
+  }
+  .masthead-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    flex-wrap: wrap;
+    padding-block: 22px 20px;
+  }
+  .wordmark { margin: 0; font-size: inherit; }
+  .wordmark a {
+    position: relative;
+    display: inline-block;
+    background: none;
+    padding: 6px 18px 10px 14px;
+  }
+  .scrap {
+    position: absolute;
+    inset: 0;
+    background: var(--yellow);
+    transform: rotate(-2.2deg);
+    clip-path: polygon(0 6%, 4% 0, 31% 4%, 58% 0, 83% 5%, 100% 1%, 98% 52%, 100% 96%, 72% 100%, 44% 95%, 17% 100%, 1% 93%, 3% 48%);
+    transition: transform 160ms ease;
+  }
+  .wordmark a:hover .scrap { transform: rotate(1.4deg) scale(1.03); }
+  .word {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.22em;
+    font-family: 'Fraunces Variable', Georgia, serif;
     font-weight: 900;
-    font-size: 1.55rem;
-    letter-spacing: 0.01em;
+    font-variation-settings: 'opsz' 144, 'wght' 900, 'SOFT' 0, 'WONK' 0;
+    font-size: clamp(1.9rem, 6vw, 3rem);
     line-height: 1;
-    font-variation-settings: 'opsz' 72, 'wght' 900, 'SOFT' 0, 'WONK' 0;
+    letter-spacing: 0.005em;
+    color: #000;
     white-space: nowrap;
+    --mark-ring: #000;
+    --mark-node: #e2560c;
   }
+  .word :global(.mark-icon) { flex: none; overflow: visible; --ring-w: 15; }
   nav ul { display: flex; align-items: center; gap: 4px 22px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
-  nav a { font-weight: 600; text-decoration-color: transparent; padding: 2px 0; }
-  nav a[aria-current='page'] { text-decoration-color: var(--accent); }
-  nav a:hover { background: none; color: var(--accent); }
-  .theme {
-    display: grid; place-items: center; width: 36px; height: 36px;
-    border: 1px solid var(--rule); border-radius: 50%;
-    background: transparent; color: var(--ink); cursor: pointer;
+  nav a {
+    font-weight: 600;
+    font-size: 1.05rem;
+    --link-mark: var(--yellow);
+    background-image: linear-gradient(var(--yellow), var(--yellow));
+    background-size: 100% 0;
   }
-  .theme:hover { border-color: var(--accent); color: var(--accent); }
+  nav a:hover, nav a[aria-current='page'] { background-size: 100% 0.32em; }
+  nav a:hover { background-size: 100% 88%; }
+  .theme {
+    display: grid; place-items: center;
+    width: 38px; height: 38px;
+    border: 2px solid #000; border-radius: 50%;
+    background: var(--yellow); color: #000; cursor: pointer;
+  }
+  .theme:hover { background: #fff; }
 </style>

@@ -1,74 +1,51 @@
 ---
-import LogoMark from './LogoMark.astro';
+import Collage from './Collage.astro';
 import { SITE, url } from '../lib/site';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="panel">
   <div class="wrap footer-inner">
-    <div class="brand">
-      <LogoMark size="2.6rem" cursor />
-      <p class="tagline">Deeper branches.<br />Better insights.</p>
-    </div>
-    <div class="cols">
-      <p class="label">// read</p>
-      <ul>
-        <li><a href={url('/posts')}>All posts</a></li>
-        <li><a href={url('/topics')}>Topics</a></li>
-        <li><a href={url('/rss.xml')}>RSS feed</a></li>
-      </ul>
-    </div>
-    <div class="cols">
-      <p class="label">// find me</p>
-      <ul>
-        <li><a href={SITE.github} rel="me">GitHub</a></li>
-        <li><a href={SITE.coffee}>Buy me a coffee</a></li>
-        <li><a href={url('/about')}>About</a></li>
-      </ul>
-    </div>
-    <p class="copy">&copy; {year} ForkLore. Everything tested here is on systems I own or am authorised to test.</p>
+    <p class="sign">
+      Written and built by {SITE.author} in Melbourne. Follow the evidence, question the assumptions.
+    </p>
+    <ul class="links">
+      <li><a href={url('/rss.xml')}>RSS</a></li>
+      <li><a href={SITE.github} rel="me">GitHub</a></li>
+      <li><a href={SITE.coffee}>Buy me a coffee</a></li>
+    </ul>
+    <p class="copy">&copy; {year} ForkLore</p>
   </div>
   </div>
-  <img
-    class="cover"
-    src={url('/images/forklore-cover.webp')}
-    width="2400"
-    height="600"
-    loading="lazy"
-    decoding="async"
-    alt="ForkLore collage: a big yellow 'hi!' on orange, surrounded by a Melbourne tram, an equestrian statue, a retro error window, wifi and bug icons, a TV-headed figure in a red hat, and a Bitcoin sign reading 'I'm hodling it'."
-  />
+  <Collage />
 </footer>
 
 <style>
-  .site-footer { margin-top: 112px; border-top: 1px solid var(--rule); }
-  /* The dark page ends in a rounded edge that sits over the collage */
+  .site-footer { --page-radius: clamp(24px, 4vw, 48px); margin-top: 96px; border-top: 3px solid var(--ink); }
+  /* The page ends in a rounded edge that sits over the collage */
   .panel {
     position: relative;
     z-index: 1;
-    background-color: var(--bg);
-    background-image: radial-gradient(var(--dots) 1px, transparent 1.4px);
-    background-size: 24px 24px;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 26px 26px;
     background-attachment: fixed;
     border-radius: 0 0 var(--page-radius) var(--page-radius);
   }
+  .site-footer :global(.collage) { margin-top: calc(-1 * var(--page-radius)); padding-top: var(--page-radius); }
   .footer-inner {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    gap: 32px 40px;
-    padding-block: 44px 36px;
+    grid-template-columns: 1fr auto;
+    gap: 8px 32px;
+    padding-block: 28px 32px;
+    align-items: start;
   }
-  .brand { display: flex; flex-direction: column; gap: 14px; }
-  .tagline { margin: 0; font-family: var(--font-mono); color: var(--label); font-size: 0.95rem; line-height: 1.6; }
-  .cols ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
-  .cols a { text-decoration-color: transparent; }
-  .cols a:hover { background: none; color: var(--accent); }
-  .copy { grid-column: 1 / -1; margin: 12px 0 0; padding-top: 20px; border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.88rem; }
-  .site-footer { --page-radius: clamp(24px, 4vw, 48px); }
-  .cover { width: 100%; aspect-ratio: 4 / 1; object-fit: cover; background: #ed6c1d; margin-top: calc(-1 * var(--page-radius)); position: relative; z-index: 0; }
-  @media (max-width: 720px) {
-    .footer-inner { grid-template-columns: 1fr 1fr; }
-    .brand { grid-column: 1 / -1; }
-    .cover { aspect-ratio: 2.4 / 1; object-position: 30% center; }
+  .sign { margin: 0; max-width: 46ch; }
+  .links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-weight: 600; flex-wrap: wrap; }
+  .copy { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+  @media (max-width: 640px) {
+    .footer-inner { grid-template-columns: 1fr; }
   }
 </style>
