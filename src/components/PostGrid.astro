@@ -43,19 +43,11 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     </div>
     {heading && <h2 class="bar-title">{heading}</h2>}
     {intro && <p class="bar-intro">{intro}</p>}
-    <div class="filters-wrap">
-    <button type="button" class="scroll-btn prev" aria-label="Scroll topics left" hidden>
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
     <div class="filters" role="group" aria-label="Topics">
       <button type="button" class="pill" aria-pressed="true" data-tag="">All <span>{posts.length}</span></button>
       {topics.map(([t, n]) => (
         <button type="button" class="pill" aria-pressed="false" data-tag={slugify(t)}>{t} <span>{n}</span></button>
       ))}
-    </div>
-    <button type="button" class="scroll-btn next" aria-label="Scroll topics right" hidden>
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
     </div>
   </section>
 )}
@@ -111,50 +103,6 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     }));
     input?.addEventListener('input', apply);
 
-    // Topics row: arrows, mouse wheel and drag all scroll it sideways
-    const row = bar.querySelector<HTMLElement>('.filters');
-    const prev = bar.querySelector<HTMLButtonElement>('.scroll-btn.prev');
-    const next = bar.querySelector<HTMLButtonElement>('.scroll-btn.next');
-    if (row && prev && next) {
-      const update = () => {
-        const max = row.scrollWidth - row.clientWidth;
-        prev.hidden = row.scrollLeft <= 2;
-        next.hidden = row.scrollLeft >= max - 2;
-        row.classList.toggle('at-end', row.scrollLeft >= max - 2);
-      };
-      const step = () => Math.max(160, row.clientWidth * 0.6);
-      prev.addEventListener('click', () => row.scrollBy({ left: -step(), behavior: 'smooth' }));
-      next.addEventListener('click', () => row.scrollBy({ left: step(), behavior: 'smooth' }));
-      row.addEventListener('scroll', update, { passive: true });
-      window.addEventListener('resize', update);
-      // A normal (vertical) mouse wheel scrolls the row sideways while it has more to show
-      row.addEventListener('wheel', (e) => {
-        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-        const max = row.scrollWidth - row.clientWidth;
-        if (max <= 0) return;
-        const atStart = row.scrollLeft <= 0 && e.deltaY < 0;
-        const atEnd = row.scrollLeft >= max - 1 && e.deltaY > 0;
-        if (atStart || atEnd) return;
-        e.preventDefault();
-        row.scrollLeft += e.deltaY;
-      }, { passive: false });
-      // Click and drag with a mouse
-      let down = false, startX = 0, startLeft = 0, moved = false;
-      row.addEventListener('pointerdown', (e) => {
-        if (e.pointerType !== 'mouse') return;
-        down = true; moved = false; startX = e.clientX; startLeft = row.scrollLeft;
-      });
-      window.addEventListener('pointermove', (e) => {
-        if (!down) return;
-        const dx = e.clientX - startX;
-        if (Math.abs(dx) > 4) { moved = true; row.classList.add('dragging'); }
-        row.scrollLeft = startLeft - dx;
-      });
-      window.addEventListener('pointerup', () => { down = false; row.classList.remove('dragging'); });
-      // Don't treat the end of a drag as a click on a topic
-      row.addEventListener('click', (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
-      update();
-    }
   }
 </script>
 
@@ -168,10 +116,8 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     padding: clamp(14px, 2vw, 18px) clamp(20px, 3vw, 32px) clamp(20px, 3vw, 28px);
     margin: 0 0 16px;
   }
-  .bar-tab {
-    width: min(340px, 100%);
-    margin: 0 0 18px calc(-1 * clamp(6px, 1.4vw, 18px));
-  }
+  /* Search spans the full width of the box */
+  .bar-tab { width: 100%; margin: 0 0 18px; }
   .bar-title {
     font-family: var(--font-display);
     font-weight: 900;
@@ -180,45 +126,10 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     line-height: 1;
     margin: 0 0 12px;
   }
-  .bar-intro { margin: 0 0 20px; max-width: 70ch; color: rgba(243, 239, 228, 0.78); line-height: 1.55; }
-  /* Topics run in one row and scroll sideways */
-  .filters {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 8px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scroll-padding-inline: clamp(20px, 3vw, 32px);
-    scrollbar-width: none;
-    margin-inline: calc(-1 * clamp(20px, 3vw, 32px));
-    padding-inline: clamp(20px, 3vw, 32px);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
-  }
-  .filters::-webkit-scrollbar { display: none; }
-  .filters.at-end { mask-image: none; }
-  .filters.dragging { scroll-snap-type: none; user-select: none; }
-  .filters-wrap { position: relative; }
-  .scroll-btn {
-    position: absolute;
-    top: 50%;
-    z-index: 2;
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    margin-top: -18px;
-    border: 0;
-    border-radius: 50%;
-    background: #f3efe4;
-    color: #000;
-    box-shadow: 0 0 0 4px #000;
-  }
-  .scroll-btn:hover { background: #ffde59; }
-  .scroll-btn[hidden] { display: none; }
-  .prev { left: calc(-1 * clamp(6px, 1vw, 12px)); }
-  .next { right: calc(-1 * clamp(6px, 1vw, 12px)); }
-  .pill { flex: none; scroll-snap-align: start; white-space: nowrap; }
+  .bar-intro { margin: 0 0 20px; max-width: none; color: rgba(243, 239, 228, 0.78); line-height: 1.55; }
+  /* Topics wrap across the full width of the box, left aligned */
+  .filters { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
+  .pill { flex: none; white-space: nowrap; }
   .pill {
     font: inherit;
     font-size: 0.9rem;
