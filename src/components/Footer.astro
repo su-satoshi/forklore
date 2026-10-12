@@ -5,6 +5,7 @@ const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
   <div class="panel">
+  <div class="card">
   <div class="wrap footer-inner">
     <p class="sign">
       Written and built by {SITE.author} in Melbourne. Follow the evidence, question the assumptions.
@@ -17,11 +18,12 @@ const year = new Date().getFullYear();
     <p class="copy">&copy; {year} ForkLore</p>
   </div>
   </div>
+  </div>
   <Collage />
 </footer>
 
 <style>
-  .site-footer { --page-radius: clamp(24px, 4vw, 48px); margin-top: 96px; border-top: 3px solid var(--ink); }
+  .site-footer { --page-radius: clamp(24px, 4vw, 48px); --card-inset: clamp(10px, 1.4vw, 18px); margin-top: 96px; }
   /* The page ends in a rounded edge that sits over the collage */
   .panel {
     position: relative;
@@ -33,18 +35,30 @@ const year = new Date().getFullYear();
     background-size: 26px 26px;
     background-attachment: fixed;
     border-radius: 0 0 var(--page-radius) var(--page-radius);
+    padding: 0 var(--card-inset) var(--card-inset);
   }
+  /* Black footer card, rounded on all sides with the same radius as the page bottom */
+  .card {
+    background: #000;
+    color: #f3efe4;
+    border-radius: calc(var(--page-radius) - var(--card-inset) / 2);
+  }
+  @media (prefers-color-scheme: dark) { :global(:root:not([data-theme='light'])) .card { box-shadow: inset 0 0 0 1px rgba(243, 239, 228, 0.12); } }
+  :global(:root[data-theme='dark']) .card { box-shadow: inset 0 0 0 1px rgba(243, 239, 228, 0.12); }
+  .card a { --link-mark: #ed6c1d; background-image: linear-gradient(#ed6c1d, #ed6c1d); }
+  .card a:hover { color: #000; }
+  .card :focus-visible { outline-color: #ffde59; }
   .site-footer :global(.collage) { margin-top: calc(-1 * var(--page-radius)); padding-top: var(--page-radius); }
   .footer-inner {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 8px 32px;
-    padding-block: 28px 32px;
+    padding-block: 36px 40px;
     align-items: start;
   }
   .sign { margin: 0; max-width: 46ch; }
   .links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-weight: 600; flex-wrap: wrap; }
-  .copy { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+  .copy { margin: 0; color: rgba(243, 239, 228, 0.62); font-size: 0.9rem; }
   @media (max-width: 640px) {
     .footer-inner { grid-template-columns: 1fr; }
   }
