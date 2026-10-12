@@ -4,6 +4,7 @@ import { SITE, url } from '../lib/site';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
+  <div class="panel">
   <div class="wrap footer-inner">
     <p class="sign">
       Written and built by {SITE.author} in Melbourne. Follow the evidence, question the assumptions.
@@ -15,13 +16,25 @@ const year = new Date().getFullYear();
     </ul>
     <p class="copy">&copy; {year} ForkLore</p>
   </div>
+  </div>
   <Collage />
 </footer>
 
 <style>
   .site-footer { --page-radius: clamp(24px, 4vw, 48px); margin-top: 96px; border-top: 3px solid var(--ink); }
-  /* The footer artwork has rounded top corners, with the page showing behind them */
-  .site-footer :global(.collage) { border-radius: var(--page-radius) var(--page-radius) 0 0; }
+  /* The page ends in a rounded edge that sits over the collage */
+  .panel {
+    position: relative;
+    z-index: 1;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 26px 26px;
+    background-attachment: fixed;
+    border-radius: 0 0 var(--page-radius) var(--page-radius);
+  }
+  .site-footer :global(.collage) { margin-top: calc(-1 * var(--page-radius)); padding-top: var(--page-radius); }
   .footer-inner {
     display: grid;
     grid-template-columns: 1fr auto;
