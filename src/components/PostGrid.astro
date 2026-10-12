@@ -106,35 +106,18 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
 </script>
 
 <style>
-  /* Black box with the same tabbed shape as the white card panels; the search box sits in the tab */
+  /* Black rounded box: search at the top, then the intro, then the topics row */
   .bar {
     --r: 28px;
-    --tab-r: 18px;
-    position: relative;
     background: #000;
     color: #f3efe4;
-    border-radius: 0 var(--r) var(--r) var(--r);
-    padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 32px);
-    margin: 66px 0 16px;
+    border-radius: var(--r);
+    padding: clamp(14px, 2vw, 18px) clamp(20px, 3vw, 32px) clamp(20px, 3vw, 28px);
+    margin: 0 0 16px;
   }
   .bar-tab {
-    position: absolute;
-    left: 0;
-    bottom: calc(100% - 1px);
-    width: min(340px, calc(100% - 40px));
-    padding: 12px 12px 0;
-    background: #000;
-    border-radius: var(--tab-r) var(--tab-r) 0 0;
-  }
-  /* Concave curve where the tab meets the box */
-  .bar-tab::after {
-    content: '';
-    position: absolute;
-    left: 100%;
-    bottom: 0;
-    width: var(--tab-r);
-    height: var(--tab-r);
-    background: radial-gradient(circle at 100% 0, transparent calc(var(--tab-r) - 0.5px), #000 var(--tab-r));
+    width: min(340px, 100%);
+    margin: 0 0 18px calc(-1 * clamp(6px, 1.4vw, 18px));
   }
   .bar-title {
     font-family: var(--font-display);
