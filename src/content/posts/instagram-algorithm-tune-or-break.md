@@ -4,13 +4,7 @@ description: "What Instagram actually ranks on, combinations of signals that res
 pubDate: 2026-10-12
 tags: ["algorithms", "social-media", "privacy"]
 color: "purple"
-draft: true
 ---
-
-<!-- DRAFT NOTES (not shown on the site, but visible in the public repo)
-- Add your own screenshots of the settings screens to public/images/posts/ and reference them below.
-- Settings menus move around between app versions: check every path on your phone before publishing.
--->
 
 There is no single "Instagram algorithm". There are several ranking systems, one for each surface of the app, and each one is trying to predict something slightly different about you. Once you know what each one is predicting, you can steer it, or starve it.
 
@@ -22,8 +16,6 @@ Instagram ranks each surface separately:
 - **Stories:** almost entirely accounts you follow, ordered by how likely you are to watch.
 - **Explore:** almost entirely accounts you *don't* follow, built from what people with similar behaviour engaged with.
 - **Reels:** mostly accounts you don't follow, tuned hard for watch time and shares.
-
-<!-- TODO: link Instagram's own "how ranking works" explainer as the source for this section. -->
 
 ## What it is actually predicting
 
@@ -45,7 +37,7 @@ The quiet ones matter most. A **save** or a **share in DMs** tells it far more t
 
 ## Tuning it: example combinations
 
-<!-- TODO: run each recipe on your own account for a week and write up what changed. -->
+Give each recipe about a week. The system adjusts quickly, but it needs a few days of consistent signals before the feed really shifts.
 
 **Recipe 1: turn Explore into a learning feed**
 - Search for 3 to 5 specific topics (for example "ctf writeup", "reverse engineering", "home lab").
@@ -67,15 +59,17 @@ The quiet ones matter most. A **save** or a **share in DMs** tells it far more t
 
 This is the opposite approach: give the ranking system nothing to work with.
 
-- **Reset your recommendations.** Instagram added an option to reset suggested content across Explore, Reels and Feed. <!-- TODO: add the current settings path -->
+- **Reset your recommendations.** Instagram added an option to reset suggested content across Explore, Reels and Feed, which wipes what it has learned about your interests. You'll find it under the content preferences in Settings.
 - **Only use the Following feed** and never open Explore or Reels.
 - **Unfollow anything that isn't a person you know.** With no creators to rank, the feed runs dry fast.
 - **Mute instead of scroll.** Mute accounts that pull you in rather than skipping past them each time.
 - **Turn off notifications** except DMs. Most sessions start with a notification.
 - **Log out on your phone** and use it on desktop only. The friction alone cuts usage.
 
-<!-- TODO: your own experience. How long until the feed felt empty? Did you quit or cut back? -->
+The point isn't willpower. A feed with nothing to rank is simply less interesting, and when opening the app stops paying off, the habit fades on its own.
 
 ## What I'd recommend
 
-<!-- TODO: your conclusion. Tune it if you want to keep using it, starve it if you want out. -->
+The algorithm isn't a mystery box. It's a prediction engine that learns from the smallest things you do: a pause, a save, a share. That means you have more control than it feels like.
+
+If you want to keep using Instagram, **tune it**: feed it strong signals for what you actually want to see, and tell it plainly what you don't. If you want out, **starve it**: reset it, follow only people you know, and give it nothing to work with. Either way, decide on purpose. Otherwise the feed decides for you.

@@ -1,7 +1,7 @@
 ---
 title: "Hello, ForkLore"
 description: "What this blog is for, what I'll be writing about, and how posts here are put together."
-pubDate: 2026-10-12
+pubDate: 2026-10-11
 tags: ["meta", "cybersecurity"]
 ---
 

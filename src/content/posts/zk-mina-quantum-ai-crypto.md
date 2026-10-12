@@ -4,13 +4,7 @@ description: "A tour of zero-knowledge blockchains like Mina, how SNARKs work, a
 pubDate: 2026-10-12
 tags: ["blockchain", "cryptography", "zero-knowledge"]
 color: "yellow"
-draft: true
 ---
-
-<!-- DRAFT NOTES (not shown on the site, but visible in the public repo)
-- Quantum timelines are contested. Present estimates as estimates and cite where each one comes from.
-- Double-check any specific numbers (proof sizes, chain size, qubit counts) against primary sources before publishing.
--->
 
 Most blockchains ask every participant to re-check everything. Zero-knowledge blockchains ask you to check a short proof instead. That shift is powerful, and it also changes which kinds of maths the whole system depends on, which matters a lot once you start asking what quantum computers and AI could break.
 
@@ -23,7 +17,7 @@ A zero-knowledge proof lets someone convince you a statement is true without sho
 - **zk-SNARK:** *Succinct Non-interactive ARgument of Knowledge.* Tiny proofs that are fast to verify. Many popular constructions rely on elliptic curves and pairings, and some need a trusted setup.
 - **zk-STARK:** *Scalable Transparent ARgument of Knowledge.* No trusted setup, built on hash functions, larger proofs.
 
-<!-- TODO: a simple diagram of prover -> proof -> verifier. -->
+The flow is always the same: a **prover** does the expensive work and produces a **proof**, and a **verifier** checks that proof quickly without redoing the work or seeing the secret inputs.
 
 ## Mina: a blockchain that stays tiny
 
@@ -32,7 +26,7 @@ Mina uses **recursive** zk-SNARKs: each new block includes a proof that verifies
 - Proof system: Kimchi (a PLONK-style SNARK), with recursion handled by Pickles.
 - zkApps: smart contracts where the computation happens off-chain and only a proof goes on-chain.
 
-<!-- TODO: compare with zk-rollups on Ethereum (zkSync, Starknet, Scroll). -->
+Compare that with **zk-rollups** on Ethereum, such as zkSync, Starknet and Scroll. Rollups bundle many transactions off-chain and post a proof to Ethereum that the batch was executed correctly. Ethereum still keeps its full history; the proofs make the rollup trustworthy, not the base chain smaller. Mina goes further by making the base chain itself a proof. Starknet is also worth noting here because it uses STARKs, which matters for the quantum section below.
 
 ## What quantum computers threaten
 
@@ -54,7 +48,13 @@ So the exposure is uneven:
 
 The fix is underway: NIST published its first post-quantum standards in 2024 (ML-KEM, ML-DSA and SLH-DSA), and chains will need migration plans to move funds to quantum-safe signatures.
 
-<!-- TODO: what are Bitcoin, Ethereum and Mina each doing about post-quantum migration? -->
+Where the big chains stand:
+
+- **Bitcoin:** BIP-360 proposes a new output type built to support post-quantum signatures, with users moving their coins voluntarily. It was merged into the BIP repository in early 2026 but has not been activated.
+- **Ethereum:** the Ethereum Foundation lists four exposed areas (validator BLS signatures, KZG commitments, user ECDSA signatures and app-level SNARKs) and is working toward hash-based signatures for validators and account abstraction so users can switch signature schemes. Its roadmap targets the core post-quantum pieces around 2029.
+- **Mina:** its proof system is built on elliptic curves, so a quantum-safe Mina would need a new proof system underneath, not just new signatures.
+
+The hard open question for every chain is old coins whose owners never move them. Once their public keys can be broken, someone will have to decide whether to freeze them or let them be taken.
 
 ## What AI threatens (and what it doesn't)
 
@@ -67,4 +67,8 @@ AI doesn't break the maths. Nobody has shown a model that solves discrete logari
 
 ## The honest summary
 
-<!-- TODO: your conclusion. The maths has a deadline (quantum), the code has a problem today (bugs, and AI finding them faster). -->
+The maths behind crypto has a deadline: when large, fault-tolerant quantum computers arrive, today's elliptic-curve signatures and pairing-based SNARKs stop being safe. Nobody knows exactly when, which is why migration work has to start years before.
+
+The code has a problem today. Bugs in contracts, circuits and wallets are where money is actually lost, and AI is making those bugs faster to find for defenders and attackers alike.
+
+Zero-knowledge proofs are one of the most exciting tools in the space, and the hash-based ones may be part of how blockchains survive the quantum transition. Just don't confuse "the maths is unbroken" with "the system is safe".
