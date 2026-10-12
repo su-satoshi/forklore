@@ -34,7 +34,7 @@
     --code-inline-bg: #2c2d34;
     --code-inline-ink: var(--yellow);
     --link-mark: rgba(255, 222, 89, 0.35);
-    --surface: #26272d;
+    --surface: #000;
     color-scheme: dark;
   }
 }
@@ -47,7 +47,7 @@
   --code-inline-bg: #2c2d34;
   --code-inline-ink: var(--yellow);
   --link-mark: rgba(255, 222, 89, 0.35);
-  --surface: #26272d;
+  --surface: #000;
   color-scheme: dark;
 }
 
