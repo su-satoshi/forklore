@@ -34,20 +34,20 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
 ---
 {filters && (
   <section class="bar" aria-label="Filter posts">
-    {heading && <h2 class="bar-title">{heading}</h2>}
-    {intro && <p class="bar-intro">{intro}</p>}
-    <div class="bar-row">
-      <div class="filters" role="group" aria-label="Topics">
-        <button type="button" class="pill" aria-pressed="true" data-tag="">All <span>{posts.length}</span></button>
-        {topics.map(([t, n]) => (
-          <button type="button" class="pill" aria-pressed="false" data-tag={slugify(t)}>{t} <span>{n}</span></button>
-        ))}
-      </div>
+    <div class="bar-tab">
       <label class="search">
         <span class="visually-hidden">Search posts</span>
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <input type="search" placeholder="Search posts" autocomplete="off" />
       </label>
+    </div>
+    {heading && <h2 class="bar-title">{heading}</h2>}
+    {intro && <p class="bar-intro">{intro}</p>}
+    <div class="filters" role="group" aria-label="Topics">
+      <button type="button" class="pill" aria-pressed="true" data-tag="">All <span>{posts.length}</span></button>
+      {topics.map(([t, n]) => (
+        <button type="button" class="pill" aria-pressed="false" data-tag={slugify(t)}>{t} <span>{n}</span></button>
+      ))}
     </div>
   </section>
 )}
@@ -106,12 +106,35 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
 </script>
 
 <style>
+  /* Black box with the same tabbed shape as the white card panels; the search box sits in the tab */
   .bar {
+    --r: 28px;
+    --tab-r: 18px;
+    position: relative;
     background: #000;
     color: #f3efe4;
-    border-radius: 28px;
-    padding: clamp(20px, 3vw, 32px);
-    margin-bottom: 16px;
+    border-radius: 0 var(--r) var(--r) var(--r);
+    padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 32px);
+    margin: 66px 0 16px;
+  }
+  .bar-tab {
+    position: absolute;
+    left: 0;
+    bottom: calc(100% - 1px);
+    width: min(340px, calc(100% - 40px));
+    padding: 12px 12px 0;
+    background: #000;
+    border-radius: var(--tab-r) var(--tab-r) 0 0;
+  }
+  /* Concave curve where the tab meets the box */
+  .bar-tab::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    bottom: 0;
+    width: var(--tab-r);
+    height: var(--tab-r);
+    background: radial-gradient(circle at 100% 0, transparent calc(var(--tab-r) - 0.5px), #000 var(--tab-r));
   }
   .bar-title {
     font-family: var(--font-display);
@@ -121,9 +144,23 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     line-height: 1;
     margin: 0 0 12px;
   }
-  .bar-intro { margin: 0 0 22px; max-width: 62ch; color: rgba(243, 239, 228, 0.78); line-height: 1.55; }
-  .bar-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px 32px; flex-wrap: wrap; }
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 420px; }
+  .bar-intro { margin: 0 0 20px; max-width: 70ch; color: rgba(243, 239, 228, 0.78); line-height: 1.55; }
+  /* Topics run in one row and scroll sideways */
+  .filters {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: clamp(20px, 3vw, 32px);
+    scrollbar-width: none;
+    margin-inline: calc(-1 * clamp(20px, 3vw, 32px));
+    padding-inline: clamp(20px, 3vw, 32px);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .pill { flex: none; scroll-snap-align: start; white-space: nowrap; }
   .pill {
     font: inherit;
     font-size: 0.9rem;
@@ -142,7 +179,6 @@ for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
     display: flex;
     align-items: center;
     gap: 8px;
-    flex: 0 1 300px;
     padding: 10px 14px;
     border-radius: 12px;
     background: #26272d;
