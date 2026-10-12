@@ -1,11 +1,3 @@
-@font-face {
-  font-family: 'Masked Marvel';
-  src: url('../assets/fonts/masked-marvel-bold.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ForkLore palette, pulled from the cover collage */
 :root {
   --orange: #ed6c1d;
@@ -24,7 +16,7 @@
   --link-mark: var(--yellow);
   --surface: #fffdf7;
 
-  --font-display: 'Masked Marvel', 'Arial Black', sans-serif;
+  --font-display: 'Urbanist Variable', 'Arial Black', sans-serif;
   --font-body: 'Montserrat Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-code: 'JetBrains Mono Variable', ui-monospace, monospace;
 
@@ -145,10 +137,10 @@ h1, h2, h3, h4 { line-height: 1.15; margin: 0; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
-/* Masked Marvel Bold: comic headings. Free for non-commercial use, see src/assets/fonts/masked-marvel-LICENSE.txt */
+/* Urbanist Black: heavy, round geometric headings (Open Font License) */
 h1, h2, h3, .page-title {
-  letter-spacing: 0.02em;
-  word-spacing: -0.12em;
+  letter-spacing: -0.01em;
+  text-transform: none;
 }
 
 /* Bug cursor (mouse and trackpad only). Text fields keep the normal text cursor. */
