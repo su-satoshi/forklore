@@ -13,6 +13,21 @@ const { posts, filters = false, heading, intro } = Astro.props;
 const counts = new Map<string, number>();
 posts.forEach((p) => p.data.tags.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
 const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+
+// Bento layout: posts go into blocks of up to six. Each block size has its own
+// pattern (see the CSS below) so every column in a block ends on the same line.
+// Slot order: the first post in a block takes the wide top slot (d), the second
+// the tall slot (c), then the small ones.
+const SLOTS: Record<number, string[]> = {
+  6: ['d', 'c', 'a', 'b', 'e', 'f'],
+  5: ['d', 'c', 'a', 'b', 'e'],
+  4: ['d', 'c', 'e', 'f'],
+  3: ['d', 'c', 'e'],
+  2: ['d', 'c'],
+  1: ['d'],
+};
+const blocks: CollectionEntry<'posts'>[][] = [];
+for (let i = 0; i < posts.length; i += 6) blocks.push(posts.slice(i, i + 6));
 ---
 {filters && (
   <section class="bar" aria-label="Filter posts">
@@ -38,7 +53,11 @@ const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
   <p class="empty">No posts yet. Add a Markdown file to <code>src/content/posts</code> and it will show up here.</p>
 ) : (
   <div class="bento">
-    {posts.map((post, i) => <PostCard post={post} index={i} latest={i === 0} />)}
+    {blocks.map((block, b) => (
+      <div class={`block n${block.length}`}>
+        {block.map((post, i) => <PostCard post={post} latest={b === 0 && i === 0} slot={SLOTS[block.length][i]} />)}
+      </div>
+    ))}
   </div>
 )}
 <p class="no-match" hidden>No posts match that. Try another topic or a different search.</p>
@@ -46,20 +65,33 @@ const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
 <script>
   const bar = document.querySelector('.bar');
   if (bar) {
+    const bento = document.querySelector<HTMLElement>('.bento');
     const cards = [...document.querySelectorAll<HTMLElement>('.bento .card')];
+    const SLOTS: Record<number, string[]> = {
+      6: ['d', 'c', 'a', 'b', 'e', 'f'], 5: ['d', 'c', 'a', 'b', 'e'], 4: ['d', 'c', 'e', 'f'],
+      3: ['d', 'c', 'e'], 2: ['d', 'c'], 1: ['d'],
+    };
+    // Rebuild the blocks from the cards that are still visible, so filtered results keep a flush layout
+    const relayout = (visible: HTMLElement[]) => {
+      if (!bento) return;
+      bento.replaceChildren();
+      for (let i = 0; i < visible.length; i += 6) {
+        const group = visible.slice(i, i + 6);
+        const block = document.createElement('div');
+        block.className = `block n${group.length}`;
+        group.forEach((c, j) => { c.dataset.slot = SLOTS[group.length][j]; block.append(c); });
+        bento.append(block);
+      }
+    };
     const pills = [...bar.querySelectorAll<HTMLButtonElement>('.pill')];
     const input = bar.querySelector<HTMLInputElement>('input');
     const none = document.querySelector<HTMLElement>('.no-match');
     let tag = '';
     const apply = () => {
       const q = (input?.value ?? '').trim().toLowerCase();
-      let shown = 0;
-      cards.forEach((c) => {
-        const ok = (!tag || (c.dataset.tags ?? '').split(' ').includes(tag)) && (!q || (c.dataset.search ?? '').includes(q));
-        c.hidden = !ok;
-        if (ok) shown++;
-      });
-      if (none) none.hidden = shown > 0;
+      const visible = cards.filter((c) => (!tag || (c.dataset.tags ?? '').split(' ').includes(tag)) && (!q || (c.dataset.search ?? '').includes(q)));
+      relayout(visible);
+      if (none) none.hidden = visible.length > 0;
     };
     pills.forEach((p) => p.addEventListener('click', () => {
       tag = p.dataset.tag ?? '';
@@ -117,19 +149,32 @@ const topics = [...counts.entries()].sort((a, b) => b[1] - a[1]);
   .search input { flex: 1; min-width: 0; border: 0; background: none; color: #f3efe4; font: inherit; font-size: 0.95rem; outline: none; }
   .search input::placeholder { color: rgba(243, 239, 228, 0.5); }
 
-  .bento {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .bento > :global(.card:first-child) { grid-column: span 2; }
-  .bento > :global(.card[hidden]) { display: none; }
-  @media (max-width: 900px) {
-    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Bento blocks: sizes vary, but every column in a block ends on the same line */
+  .bento { display: grid; gap: 16px; }
+  .block { display: grid; gap: 16px; grid-auto-rows: minmax(250px, auto); }
+  .block > :global([data-slot='a']) { grid-area: a; }
+  .block > :global([data-slot='b']) { grid-area: b; }
+  .block > :global([data-slot='c']) { grid-area: c; }
+  .block > :global([data-slot='d']) { grid-area: d; }
+  .block > :global([data-slot='e']) { grid-area: e; }
+  .block > :global([data-slot='f']) { grid-area: f; }
+
+  .n6 { grid-template-columns: 1fr 0.9fr 0.9fr 1.25fr; grid-template-areas: 'a c d d' 'b c e f'; }
+  .n5 { grid-template-columns: 1fr 0.9fr 2fr; grid-template-areas: 'a c d' 'b c e'; }
+  .n4 { grid-template-columns: 0.9fr 1fr 1fr; grid-template-areas: 'c d d' 'c e f'; }
+  .n3 { grid-template-columns: 1fr 1.5fr; grid-template-areas: 'c d' 'c e'; }
+  .n2 { grid-template-columns: 1.6fr 1fr; grid-template-areas: 'd c'; }
+  .n1 { grid-template-columns: 1fr; grid-template-areas: 'd'; }
+
+  @media (max-width: 960px) {
+    .n6 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c a' 'c b' 'e f'; }
+    .n5 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c a' 'c b' 'e e'; }
+    .n4 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c e' 'c f'; }
+    .n3 { grid-template-columns: 1fr 1fr; grid-template-areas: 'd d' 'c e'; }
   }
   @media (max-width: 640px) {
-    .bento { grid-template-columns: 1fr; }
-    .bento > :global(.card:first-child) { grid-column: auto; }
+    .block { grid-template-columns: 1fr !important; grid-template-areas: none !important; grid-auto-rows: auto; }
+    .block > :global(.card) { grid-area: auto !important; }
   }
   .empty, .no-match { padding: 24px; border: 2px dashed var(--ink-soft); border-radius: 20px; }
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

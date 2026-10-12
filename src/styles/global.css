@@ -99,7 +99,7 @@ a:hover { background-size: 100% 88%; }
 
 .wrap {
   width: 100%;
-  max-width: 1080px;
+  max-width: 1200px;
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
