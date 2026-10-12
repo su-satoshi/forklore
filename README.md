@@ -47,7 +47,7 @@ npm run build    # production build into dist/
 | Paper | `#F3EFE4` | Grid-paper page background |
 | Ink | `#000000` | Text, rules, logo |
 
-Fonts: Luckiest Guy (comic-style headings, Apache 2.0), Montserrat (body), JetBrains Mono (code). All self-hosted.
+Fonts: Masked Marvel Bold by Iconian Fonts (comic-style headings, free for non-commercial use; licence in `src/assets/fonts/`), Montserrat (body), JetBrains Mono (code). All self-hosted.
 
 The logo is `src/components/Logo.astro` (letters follow the text colour, so black in light mode and cream in dark mode). Standalone SVGs are in `public/brand/`: `forklore-logo.svg` (cream letters) and `forklore-logo-inverted.svg` (black letters).
 
